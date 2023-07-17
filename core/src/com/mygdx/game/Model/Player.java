@@ -2,7 +2,10 @@ package com.mygdx.game.Model;
 
 import com.mygdx.game.AssetPath;
 
-public class Player extends AChar {
+/**
+ * represents a playable character
+ */
+public class Player extends Character {
 
     public Player(AssetPath assetPath) {
         super(assetPath);
