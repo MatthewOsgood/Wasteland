@@ -1,4 +1,4 @@
-package com.mygdx.game.screens.mainMenu;
+package com.mygdx.game.View.mainMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.SteampunkGame;
-import com.mygdx.game.screens.mainMenu.eventListener.NewGameClickListener;
+import com.mygdx.game.View.mainMenu.eventListener.NewGameClickListener;
 
 /**
  * creates the components on the main menu
@@ -31,7 +31,7 @@ public class MainMenuBuilder {
         newGameStyle.fontColor = Color.WHITE;
         newGameStyle.font = new BitmapFont();
         TextButton newGame = new TextButton("New Game", newGameStyle);
-        newGame.addListener(new NewGameClickListener(this.game, this.camera));
+        newGame.addListener(new NewGameClickListener(this.game));
         return newGame;
     }
 

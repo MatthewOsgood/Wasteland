@@ -1,4 +1,4 @@
-package com.mygdx.game.screens.mainMenu;
+package com.mygdx.game.View.mainMenu;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -13,7 +13,7 @@ import com.mygdx.game.SteampunkGame;
 public class MainMenuScreen implements Screen {
 
     private final SteampunkGame game;
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
     private final Stage stage;
 
     public MainMenuScreen(SteampunkGame game) {
@@ -48,8 +48,8 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * @param width
-     * @param height
+     * @param width the new width
+     * @param height th new height
      * @see ApplicationListener#resize(int, int)
      */
     @Override

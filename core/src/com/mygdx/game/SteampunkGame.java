@@ -2,7 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.screens.mainMenu.MainMenuScreen;
+import com.mygdx.game.View.mainMenu.MainMenuScreen;
 
 public class SteampunkGame extends Game {
 	public SpriteBatch batch;
@@ -11,7 +11,7 @@ public class SteampunkGame extends Game {
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();;
+		batch = new SpriteBatch();
 		this.mainMenuScreen = new MainMenuScreen(this);
 		this.setScreen(this.mainMenuScreen);
 	}

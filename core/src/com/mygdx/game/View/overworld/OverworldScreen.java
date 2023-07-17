@@ -1,4 +1,4 @@
-package com.mygdx.game.screens.overworld;
+package com.mygdx.game.View.overworld;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.FilePaths;
+import com.mygdx.game.AssetPath;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.SteampunkGame;
@@ -27,8 +27,8 @@ public class OverworldScreen implements Screen {
         this.game = game;
         this.batch = game.batch;
 
-        this.player = new Player(FilePaths.TEST_CHARACTER);
-        this.map = new Map(new Texture(Gdx.files.internal(FilePaths.TEST_MAP.getPath())), this.player);
+        this.player = new Player(AssetPath.TEST_CHARACTER);
+        this.map = new Map(new Texture(Gdx.files.internal(AssetPath.TEST_MAP.getPath())), this.player);
 
         this.camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
         this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);

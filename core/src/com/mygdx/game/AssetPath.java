@@ -1,11 +1,11 @@
 package com.mygdx.game;
 
-public enum FilePaths {
+public enum AssetPath {
     TEST_MAP("testMap.png"),
     TEST_CHARACTER("testCharacter.png");
 
     private final String path;
-    FilePaths(String path){
+    AssetPath(String path){
         this.path = path;
     }
 
