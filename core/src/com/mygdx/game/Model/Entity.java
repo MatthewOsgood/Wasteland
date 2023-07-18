@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
  */
 public interface Entity {
 
-    void setMap(Map map);
     void setPosition(float x, float y);
     void translate(float x, float y);
     void draw(SpriteBatch batch);

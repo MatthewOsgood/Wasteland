@@ -9,10 +9,9 @@ import com.mygdx.game.AssetPath;
 
 public abstract class Character implements Entity {
     protected final Texture texture;
-    private final Rectangle reach;
-    private Map map;
-    private float posX;
-    private float posY;
+    private final Rectangle reachBox;
+    protected float posX;
+    protected float posY;
     public final float width;
     public final float height;
     private final float moveSpeed;
@@ -25,7 +24,7 @@ public abstract class Character implements Entity {
         this.width = width;
         this.height = height;
         this.moveSpeed = moveSpeed;
-        this.reach = new Rectangle(posX, posY, width * 2, height * 2);
+        this.reachBox = new Rectangle(posX, posY, width * 1.25f, height * 1.25f);
     }
 
     public Character(AssetPath assetPath, float posX, float posY, float width, float height) {
@@ -41,14 +40,10 @@ public abstract class Character implements Entity {
     }
 
     @Override
-    public void setMap(Map map) {
-        this.map = map;
-    }
-    @Override
     public void translate(float x, float y) {
         this.posX += x * moveSpeed;
         this.posY += y * moveSpeed;
-        this.reach.setPosition(x - this.width / 2, y - this.height / 2);
+        this.reachBox.setCenter(this.getCenter());
     }
     @Override
     public void draw(SpriteBatch batch) {
@@ -67,10 +62,11 @@ public abstract class Character implements Entity {
     public void setPosition(float x, float y) {
         this.posX = x;
         this.posY = y;
+        this.reachBox.setPosition(x, y);
     }
 
     @Override
     public boolean canInteract(Character that) {
-        return this.reach.overlaps(that.reach);
+        return this.reachBox.overlaps(that.reachBox);
     }
 }

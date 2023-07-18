@@ -4,31 +4,35 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.AssetPath;
 import com.mygdx.game.Model.Map;
+import com.mygdx.game.Model.NPC;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.SteampunkGame;
 
 public class OverworldScreen implements Screen {
 
-    private static final float GAME_WIDTH = 1200;
-    private static final float GAME_HEIGHT = 715;
+    private static final float GAME_WIDTH = 2400;
+    private static final float GAME_HEIGHT = 1430;
     private static final float VIEW_WIDTH = 160;
     private static final float VIEW_HEIGHT = 90;
-    private final SteampunkGame game;
     private final SpriteBatch batch;
+    private final BitmapFont font;
     private final OrthographicCamera camera;
     private final Map map;
     private final Player player;
 
     public OverworldScreen(SteampunkGame game) {
-        this.game = game;
         this.batch = game.batch;
+        this.font = game.font;
 
         this.player = new Player(AssetPath.TEST_CHARACTER);
         this.map = new Map(new Texture(Gdx.files.internal(AssetPath.TEST_MAP.getPath())), this.player);
+
+        this.map.addNPC(new NPC(AssetPath.TEST_NPC, 50f, 50f));
 
         this.camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
         this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);
@@ -56,8 +60,7 @@ public class OverworldScreen implements Screen {
         this.camera.update();
         this.batch.setProjectionMatrix(this.camera.combined);
         this.batch.begin();
-        this.map.draw(this.batch);
-        this.player.draw(this.batch);
+        this.map.draw(this.batch, this.font);
         this.batch.end();
     }
 
