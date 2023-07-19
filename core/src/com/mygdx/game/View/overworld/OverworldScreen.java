@@ -6,8 +6,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.AssetPath;
+import com.mygdx.game.TexturePath;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Model.NPC;
 import com.mygdx.game.Model.Player;
@@ -15,27 +19,29 @@ import com.mygdx.game.SteampunkGame;
 
 public class OverworldScreen implements Screen {
 
-    private static final float GAME_WIDTH = 2400;
-    private static final float GAME_HEIGHT = 1430;
-    private static final float VIEW_WIDTH = 160;
-    private static final float VIEW_HEIGHT = 90;
     private final SpriteBatch batch;
     private final BitmapFont font;
     private final OrthographicCamera camera;
+    private float delta;
+    private final World world;
+    private final Box2DDebugRenderer debugRenderer;
     private final Map map;
     private final Player player;
 
     public OverworldScreen(SteampunkGame game) {
         this.batch = game.batch;
         this.font = game.font;
+        Box2D.init();
+        this.world = new World(new Vector2(0, 0), true);
+        this.debugRenderer = new Box2DDebugRenderer();
 
-        this.player = new Player(AssetPath.TEST_CHARACTER);
-        this.map = new Map(new Texture(Gdx.files.internal(AssetPath.TEST_MAP.getPath())), this.player);
+        this.player = new Player(TexturePath.TEST_CHARACTER);
+        this.map = new Map(new Texture(Gdx.files.internal(TexturePath.TEST_MAP.getPath())), this.player);
 
-        this.map.addNPC(new NPC(AssetPath.TEST_NPC, 50f, 50f));
+        this.map.addNPC(new NPC(TexturePath.TEST_NPC, 50f, 50f));
 
-        this.camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
-        this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);
+        this.camera = new OrthographicCamera(SteampunkGame.GAME_WIDTH, SteampunkGame.GAME_HEIGHT);
+        this.camera.setToOrtho(false, SteampunkGame.VIEW_WIDTH, SteampunkGame.VIEW_HEIGHT);
         this.centerCamera();
         this.camera.update();
     }
@@ -64,6 +70,11 @@ public class OverworldScreen implements Screen {
         this.batch.end();
     }
 
+    public void update(float delta) {
+        this.delta = delta;
+        this.handleInput();
+    }
+
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             this.handleW();
@@ -76,6 +87,9 @@ public class OverworldScreen implements Screen {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             this.handleD();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            this.map.handleInteract();
         }
 
     }
@@ -116,8 +130,8 @@ public class OverworldScreen implements Screen {
      * @param y y-axis movement
      */
     private void move(float x, float y) {
-        x *= Gdx.graphics.getDeltaTime();
-        y *= Gdx.graphics.getDeltaTime();
+        x *= this.delta;
+        y *= this.delta;
         this.player.translate(x, y);
         this.centerCamera();
     }
@@ -136,8 +150,8 @@ public class OverworldScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        this.camera.viewportWidth = VIEW_WIDTH * height/width;
-        this.camera.viewportHeight = VIEW_HEIGHT * height/width;
+        this.camera.viewportWidth = SteampunkGame.VIEW_WIDTH * height/width;
+        this.camera.viewportHeight = SteampunkGame.VIEW_HEIGHT * height/width;
         this.camera.update();
     }
 
@@ -170,7 +184,11 @@ public class OverworldScreen implements Screen {
      */
     @Override
     public void dispose() {
+        this.batch.dispose();
+        this.font.dispose();
         this.map.dispose();
         this.player.dispose();
+        this.world.dispose();
+        this.debugRenderer.dispose();
     }
 }

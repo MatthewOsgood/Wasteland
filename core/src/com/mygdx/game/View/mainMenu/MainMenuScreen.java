@@ -22,7 +22,7 @@ public class MainMenuScreen implements Screen {
         this.camera.setToOrtho(false, 160, 90);
         MainMenuBuilder builder = new MainMenuBuilder(game, this.camera);
         FitViewport viewport = new FitViewport(160, 90);
-        this.stage = new Stage(viewport);
+        this.stage = new Stage(viewport, game.batch);
         this.stage.addActor(builder.build());
         Gdx.input.setInputProcessor(this.stage);
     }

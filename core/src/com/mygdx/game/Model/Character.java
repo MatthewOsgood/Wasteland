@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.AssetPath;
+import com.mygdx.game.TexturePath;
 
 public abstract class Character implements Entity {
     protected final Texture texture;
@@ -17,8 +17,8 @@ public abstract class Character implements Entity {
     private final float moveSpeed;
 
 
-    public Character(AssetPath assetPath, float posX, float posY, float width, float height, float moveSpeed) {
-        this.texture = new Texture(Gdx.files.internal(assetPath.getPath()));
+    public Character(TexturePath texturePath, float posX, float posY, float width, float height, float moveSpeed) {
+        this.texture = new Texture(Gdx.files.internal(texturePath.getPath()));
         this.posX = posX;
         this.posY = posY;
         this.width = width;
@@ -27,16 +27,16 @@ public abstract class Character implements Entity {
         this.reachBox = new Rectangle(posX, posY, width * 1.25f, height * 1.25f);
     }
 
-    public Character(AssetPath assetPath, float posX, float posY, float width, float height) {
-        this(assetPath, posX, posY, width, height, 100);
+    public Character(TexturePath texturePath, float posX, float posY, float width, float height) {
+        this(texturePath, posX, posY, width, height, 100);
     }
 
-    public Character(AssetPath assetPath, float posX, float posY) {
-        this(assetPath, posX, posY, 8f, 4.5f);
+    public Character(TexturePath texturePath, float posX, float posY) {
+        this(texturePath, posX, posY, 8f, 4.5f);
     }
 
-    public Character(AssetPath assetPath) {
-        this(assetPath, 0, 0);
+    public Character(TexturePath texturePath) {
+        this(texturePath, 0, 0);
     }
 
     @Override

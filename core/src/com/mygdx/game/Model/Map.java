@@ -9,6 +9,7 @@ public class Map {
     private final Player player;
     private final Texture texture;
     private final Array<NPC> npcs;
+    private Interactable interactable;
 
     public Map(Texture texture, Player player) {
         this.player = player;
@@ -38,5 +39,9 @@ public class Map {
 
     public void addNPC(NPC npc) {
         this.npcs.add(npc);
+    }
+
+    public void handleInteract() {
+
     }
 }

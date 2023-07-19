@@ -1,13 +1,13 @@
 package com.mygdx.game.Model;
 
-import com.mygdx.game.AssetPath;
+import com.mygdx.game.TexturePath;
 
 /**
  * represents a playable character
  */
 public class Player extends Character {
 
-    public Player(AssetPath assetPath) {
-        super(assetPath);
+    public Player(TexturePath texturePath) {
+        super(texturePath);
     }
 }

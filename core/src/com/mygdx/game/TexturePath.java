@@ -1,12 +1,12 @@
 package com.mygdx.game;
 
-public enum AssetPath {
+public enum TexturePath {
     TEST_MAP("testMap.png"),
     TEST_CHARACTER("testCharacter.png"),
     TEST_NPC("testNPC.png");
 
     private final String path;
-    AssetPath(String path){
+    TexturePath(String path){
         this.path = path;
     }
 

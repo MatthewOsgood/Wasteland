@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.AssetPath;
+import com.mygdx.game.TexturePath;
 
 /**
  * represents a npc in the overworld
@@ -12,12 +12,12 @@ import com.mygdx.game.AssetPath;
 public class NPC extends Character {
     private static final String INTERACT_PROMPT = "E";
 
-    public NPC(AssetPath assetPath) {
-        super(assetPath);
+    public NPC(TexturePath texturePath) {
+        super(texturePath);
     }
 
-    public NPC(AssetPath assetPath, float x, float y) {
-        super(assetPath, x, y);
+    public NPC(TexturePath texturePath, float x, float y) {
+        super(texturePath, x, y);
     }
 
     /**
