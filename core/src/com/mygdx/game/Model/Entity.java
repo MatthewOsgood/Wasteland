@@ -9,10 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 public interface Entity {
 
     void setPosition(float x, float y);
-    void translate(float x, float y);
+    void setVelocity(float x, float y);
+    void setVelocity(Vector2 v);
     void draw(SpriteBatch batch);
     void dispose();
     Vector2 getCenter();
-    boolean canInteract(Character that);
+    Vector2 getVelocity();
 
 }

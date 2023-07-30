@@ -4,27 +4,47 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.View.mainMenu.eventListener.NewGameClickListener;
 
 public class MainMenuScreen implements Screen {
 
     private final SteampunkGame game;
-    private final OrthographicCamera camera;
     private final Stage stage;
 
     public MainMenuScreen(SteampunkGame game) {
         this.game = game;
-        this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, 160, 90);
-        MainMenuBuilder builder = new MainMenuBuilder(game, this.camera);
-        FitViewport viewport = new FitViewport(160, 90);
+        ScreenViewport viewport = new ScreenViewport(game.camera);
         this.stage = new Stage(viewport, game.batch);
-        this.stage.addActor(builder.build());
+        this.stage.addActor(this.makeTable());
         Gdx.input.setInputProcessor(this.stage);
+    }
+
+    /**
+     * initializes the New Game button
+     * @return the New Game button
+     */
+    private TextButton makeNewGame() {
+        TextButton.TextButtonStyle newGameStyle = new TextButton.TextButtonStyle();
+        newGameStyle.fontColor = Color.WHITE;
+        newGameStyle.font = new BitmapFont();
+        TextButton newGame = new TextButton("New Game", newGameStyle);
+        newGame.addListener(new NewGameClickListener(this.game, this.stage));
+        return newGame;
+    }
+
+    public Table makeTable() {
+        Table table = new Table();
+        table.add(this.makeNewGame());
+        table.setFillParent(true);
+        return table;
     }
 
     /**
@@ -42,7 +62,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(Color.BLACK);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
     }

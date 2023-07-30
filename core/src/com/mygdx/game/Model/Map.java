@@ -1,20 +1,24 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.enums.TiledMapPath;
 
 public class Map {
+    private final SteampunkGame game;
+    private final TiledMap tiledMap;
     private final Player player;
-    private final Texture texture;
     private final Array<NPC> npcs;
-    private Interactable interactable;
+    private final Array<Projectile> projectiles;
 
-    public Map(Texture texture, Player player) {
+    public Map(final SteampunkGame game, TiledMapPath path, Player player) {
+        this.game = game;
+        this.tiledMap = game.assetManager.get(path.getPath());
         this.player = player;
-        this.texture = texture;
         this.npcs = new Array<NPC>();
+        this.projectiles = new Array<Projectile>();
     }
 
     /**
@@ -22,26 +26,42 @@ public class Map {
      *
      * @param batch the {@link SpriteBatch} this map will be drawn on
      */
-    public void draw(SpriteBatch batch, BitmapFont font) {
-        batch.draw(this.texture, 0, 0);
+    public void draw(SpriteBatch batch) {
         this.player.draw(batch);
         for (NPC npc : this.npcs) {
             npc.draw(batch);
-            if (this.player.canInteract(npc)) {
-                npc.drawInteractPrompt(batch, font);
-            }
+        }
+        for (Projectile p : this.projectiles) {
+            p.draw(batch);
         }
     }
 
     public void dispose() {
-        this.texture.dispose();
+        this.tiledMap.dispose();
+        for (NPC npc : this.npcs) {
+            npc.dispose();
+        }
+        this.player.dispose();
+        for (Projectile p : this.projectiles) {
+            p.dispose();
+        }
     }
 
     public void addNPC(NPC npc) {
         this.npcs.add(npc);
     }
 
-    public void handleInteract() {
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
 
+    public void addProjectile(Projectile projectile) {
+        this.projectiles.add(projectile);
+    }
+
+    public void update() {
+        for (Projectile p : this.projectiles) {
+            p.update();
+        }
     }
 }

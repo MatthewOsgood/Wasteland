@@ -1,13 +1,19 @@
-package com.mygdx.game.View.Dialogue;
+package com.mygdx.game.View.dialogue;
 
-import com.mygdx.game.Characters;
+import com.mygdx.game.enums.Characters;
 
 /**
  * record of a single line of dialogue and its speaker
  */
 public class DialogueLine {
-    private final Characters speaker;
-    private final String dialogue;
+    private Characters speaker;
+    private String dialogue;
+
+    /**
+     * for JSON
+     */
+    public DialogueLine() {
+    }
 
     public DialogueLine(Characters speaker, String dialogue) {
         this.speaker = speaker;

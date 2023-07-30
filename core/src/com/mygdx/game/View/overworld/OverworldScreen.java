@@ -3,47 +3,64 @@ package com.mygdx.game.View.overworld;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.TexturePath;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Model.NPC;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.View.dialogue.DialogueOverlay;
+import com.mygdx.game.contactListeners.InteractListener;
+import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TiledMapPath;
+
+import static com.mygdx.game.SteampunkGame.*;
 
 public class OverworldScreen implements Screen {
 
+    private final SteampunkGame game;
     private final SpriteBatch batch;
     private final BitmapFont font;
     private final OrthographicCamera camera;
-    private float delta;
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
+    private final OrthogonalTiledMapRenderer tiledMapRenderer;
     private final Map map;
     private final Player player;
+    private final DialogueOverlay dialogueOverlay;
 
     public OverworldScreen(SteampunkGame game) {
+        this.game = game;
         this.batch = game.batch;
         this.font = game.font;
         Box2D.init();
-        this.world = new World(new Vector2(0, 0), true);
+        this.world = new World(new Vector2(0, 0), true );
+        this.world.setContactListener(new InteractListener());
         this.debugRenderer = new Box2DDebugRenderer();
 
-        this.player = new Player(TexturePath.TEST_CHARACTER);
-        this.map = new Map(new Texture(Gdx.files.internal(TexturePath.TEST_MAP.getPath())), this.player);
+        this.player = new Player(this.game, TexturePath.PLAYER, this.world, 15.5f, 15.5f);
+        this.map = new Map(this.game, TiledMapPath.TESTMAP, this.player);
+        this.player.setMap(this.map);
 
-        this.map.addNPC(new NPC(TexturePath.TEST_NPC, 50f, 50f));
+        this.map.addNPC(new NPC(this.game, TexturePath.TEST_NPC, this.world, 11.5f, 11.5f, ConversationPath.TEST));
 
-        this.camera = new OrthographicCamera(SteampunkGame.GAME_WIDTH, SteampunkGame.GAME_HEIGHT);
-        this.camera.setToOrtho(false, SteampunkGame.VIEW_WIDTH, SteampunkGame.VIEW_HEIGHT);
+        this.tiledMapRenderer = new OrthogonalTiledMapRenderer(this.map.getTiledMap(), 1/PPT, this.batch);
+        this.tiledMapRenderer.setView(game.camera);
+        this.camera = game.camera;
+        this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);
+
         this.centerCamera();
         this.camera.update();
+        this.dialogueOverlay = new DialogueOverlay(game);
+        Gdx.input.setInputProcessor(new InputHandler(game, this, this.player, this.map));
     }
 
     /**
@@ -51,7 +68,8 @@ public class OverworldScreen implements Screen {
      */
     @Override
     public void show() {
-
+        MapBodyBuilder.buildShapes(this.map.getTiledMap(), PPT, this.world);
+        this.tiledMapRenderer.setView(this.camera);
     }
 
     /**
@@ -62,64 +80,67 @@ public class OverworldScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
-        this.handleInput();
+        this.update();
         this.camera.update();
         this.batch.setProjectionMatrix(this.camera.combined);
+        this.tiledMapRenderer.render();
         this.batch.begin();
-        this.map.draw(this.batch, this.font);
+        this.map.draw(this.batch);
         this.batch.end();
+        this.debugRenderer.render(this.world, this.camera.combined);
+        this.dialogueOverlay.draw();
     }
 
-    public void update(float delta) {
-        this.delta = delta;
+    public void update() {
+        this.world.step(1 / 60f, 6, 2);
+        this.map.update();
         this.handleInput();
+        if (!this.player.canInteract) this.dialogueOverlay.setVisibility(false);
     }
 
     private void handleInput() {
+        this.handleMovement();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) && this.player.canInteract
+            || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && this.dialogueOverlay.isVisible()) {
+            this.handleInteract();
+        }
+    }
+
+    private void handleInteract() {
+        if (!this.dialogueOverlay.isVisible()) {
+            this.dialogueOverlay.setConversation(this.player.getConversationPath());
+            this.dialogueOverlay.setVisibility(true);
+        }
+        if (this.dialogueOverlay.update()) {
+            this.dialogueOverlay.setVisibility(false);
+        }
+    }
+
+
+    /**
+     * handles player movement
+     * not handled in {@link InputHandler} bc ths makes smoother movement
+     */
+    private void handleMovement() {
+        float vx = 0;
+        float vy = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            this.handleW();
+            vy += 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            this.handleS();
+            vy -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            this.handleA();
+            vx -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            this.handleD();
+            vx += 1;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            this.map.handleInteract();
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            vx *= 2;
+            vy *= 2;
         }
-
-    }
-
-    /**
-     * handles when the D key is pressed
-     */
-    private void handleD() {
-        this.move(1, 0);
-    }
-
-    /**
-     * handles when the A key is pressed
-     */
-    private void handleA() {
-        this.move(-1, 0);
-    }
-
-    /**
-     * handles when the S key is pressed
-     */
-    private void handleS() {
-        this.move(0, -1);
-    }
-
-    /**
-     * handles when the W key is pressed
-     */
-    private void handleW() {
-        this.move(0, 1);
+        this.move(vx, vy);
     }
 
     /**
@@ -130,9 +151,7 @@ public class OverworldScreen implements Screen {
      * @param y y-axis movement
      */
     private void move(float x, float y) {
-        x *= this.delta;
-        y *= this.delta;
-        this.player.translate(x, y);
+        this.player.setVelocity(x, y);
         this.centerCamera();
     }
 
@@ -140,7 +159,7 @@ public class OverworldScreen implements Screen {
      * centers the camera in the center of the Player
      */
     private void centerCamera() {
-        this.camera.position.set(this.player.getCenter(), 0);
+        this.camera.position.lerp(new Vector3(this.player.getCenter(), 0), 1/3f);
     }
 
     /**
@@ -150,9 +169,22 @@ public class OverworldScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        this.camera.viewportWidth = SteampunkGame.VIEW_WIDTH * height/width;
-        this.camera.viewportHeight = SteampunkGame.VIEW_HEIGHT * height/width;
+        this.camera.viewportWidth = VIEW_WIDTH * height/width;
+        this.camera.viewportHeight = VIEW_HEIGHT * height/width;
         this.camera.update();
+    }
+
+    /**
+     * Called when this screen should release all resources.
+     */
+    @Override
+    public void dispose() {
+        this.map.dispose();
+        this.player.dispose();
+        this.world.dispose();
+        this.debugRenderer.dispose();
+        this.tiledMapRenderer.dispose();
+        this.dialogueOverlay.dispose();
     }
 
     /**
@@ -177,18 +209,5 @@ public class OverworldScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    /**
-     * Called when this screen should release all resources.
-     */
-    @Override
-    public void dispose() {
-        this.batch.dispose();
-        this.font.dispose();
-        this.map.dispose();
-        this.player.dispose();
-        this.world.dispose();
-        this.debugRenderer.dispose();
     }
 }

@@ -1,10 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.enums;
 
 /**
  * represents all possible characters and their {@link TexturePath}
  */
 public enum Characters {
-    TEST_CHARACTER(TexturePath.TEST_CHARACTER, true),
+
+    NULL(TexturePath.NULL, false),
+    PLAYER(TexturePath.PLAYER, true),
     TEST_NPC(TexturePath.TEST_NPC, false);
 
     private final TexturePath texturePath;

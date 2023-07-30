@@ -1,0 +1,16 @@
+{
+dialogueLines: [
+	{
+		speaker: TEST_NPC
+		dialogue: test test test test
+	}
+	{
+		speaker: PLAYER
+		dialogue: iferailnfrnijerfjn fqwfa
+	}
+	{
+		speaker: TEST_NPC
+		dialogue: Table is a WidgetGroup that sets the position and size of its children using a logical table,
+	}
+]
+}

@@ -1,72 +1,47 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.TexturePath;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.enums.TexturePath;
 
-public abstract class Character implements Entity {
-    protected final Texture texture;
-    private final Rectangle reachBox;
-    protected float posX;
-    protected float posY;
-    public final float width;
-    public final float height;
-    private final float moveSpeed;
+public abstract class Character extends Movable {
 
-
-    public Character(TexturePath texturePath, float posX, float posY, float width, float height, float moveSpeed) {
-        this.texture = new Texture(Gdx.files.internal(texturePath.getPath()));
-        this.posX = posX;
-        this.posY = posY;
-        this.width = width;
-        this.height = height;
-        this.moveSpeed = moveSpeed;
-        this.reachBox = new Rectangle(posX, posY, width * 1.25f, height * 1.25f);
-    }
-
-    public Character(TexturePath texturePath, float posX, float posY, float width, float height) {
-        this(texturePath, posX, posY, width, height, 100);
+    /**
+     * @param game the game this character is in
+     * @param texturePath the path to this characters texture
+     * @param world the world this characters body is in
+     * @param posX the x position in tiles
+     * @param posY the y position in tiles
+     * @param width the width in tiles
+     * @param height the height in tiles
+     * @param moveSpeed the movement speed in tiles/second
+     */
+    public Character(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, float width, float height, float moveSpeed) {
+        super(game, texturePath, world, posX, posY, width, height, moveSpeed);
     }
 
-    public Character(TexturePath texturePath, float posX, float posY) {
-        this(texturePath, posX, posY, 8f, 4.5f);
+    public Character(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, float width, float height) {
+        super(game, texturePath, world, posX, posY, width, height, 3);
     }
 
-    public Character(TexturePath texturePath) {
-        this(texturePath, 0, 0);
+    public Character(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY) {
+        super(game, texturePath, world, posX, posY, 1f, 1f);
     }
 
-    @Override
-    public void translate(float x, float y) {
-        this.posX += x * moveSpeed;
-        this.posY += y * moveSpeed;
-        this.reachBox.setCenter(this.getCenter());
+    /**
+     * @param touchPoint the point to be shot at
+     */
+    public void shoot(Vector3 touchPoint) {
+        Projectile p = this.makeProjectile();
+        p.setVelocity(new Vector2(touchPoint.x, touchPoint.y).sub(this.getCenter()).nor());
+        this.map.addProjectile(p);
     }
-    @Override
-    public void draw(SpriteBatch batch) {
-        batch.draw(this.texture, this.posX, this.posY, this.width, this.height);
-    }
-    @Override
-    public void dispose() {
-        this.texture.dispose();
-    }
-    @Override
-    public Vector2 getCenter() {
-        return new Vector2(this.posX + this.width / 2, this.posY + this.height  / 2);
-    }
+
+    protected abstract Projectile makeProjectile();
 
     @Override
-    public void setPosition(float x, float y) {
-        this.posX = x;
-        this.posY = y;
-        this.reachBox.setPosition(x, y);
-    }
-
-    @Override
-    public boolean canInteract(Character that) {
-        return this.reachBox.overlaps(that.reachBox);
+    public void update() {
     }
 }

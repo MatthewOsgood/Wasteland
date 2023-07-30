@@ -1,8 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.enums;
 
 public enum ConversationPath {
 
-    TEST("TestConvo.txt");
+    TEST("Conversations/testConvo.txt");
 
     private final String path;
 

@@ -1,35 +1,62 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.TexturePath;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.enums.BitFilters;
+import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.TexturePath;
 
 /**
  * represents a npc in the overworld
  */
 public class NPC extends Character {
-    private static final String INTERACT_PROMPT = "E";
+    private final ConversationPath conversationPath;
+    private final Body reachBox;
 
-    public NPC(TexturePath texturePath) {
-        super(texturePath);
-    }
-
-    public NPC(TexturePath texturePath, float x, float y) {
-        super(texturePath, x, y);
+    public NPC(SteampunkGame game, TexturePath texturePath, World world, float x, float y, ConversationPath conversationPath) {
+        super(game, texturePath, world, x, y);
+        this.conversationPath = conversationPath;
+        this.reachBox = this.createReachBox(x, y);
     }
 
     /**
-     * draws text above this NPC prompting the player to interact with it
+     * creates the body for this Character
      *
-     * @param batch the batch the prompt will be drawn on
-     * @param font the font used to draw
+     * @return the body to be set as this character's
      */
-    public void drawInteractPrompt(SpriteBatch batch, BitmapFont font) {
-        Vector2 center = this.getCenter();
-        font.getData().setScale(.2f);
-        font.setColor(Color.BLACK);
-        font.draw(batch, INTERACT_PROMPT, center.x - 1f, center.y + this.height + 1);
+    @Override
+    protected Body createBody(float posX, float posY) {
+        Body b = this.createBox(posX, posY, width, height, BodyDef.BodyType.StaticBody, false);
+        Filter filter = b.getFixtureList().get(0).getFilterData();
+        filter.categoryBits = BitFilters.NPC;
+        filter.maskBits = BitFilters.ENEMY | BitFilters.OBSTACLE | BitFilters.ENEMY_PROJECTILE;
+        b.getFixtureList().get(0).setFilterData(filter);
+        return b;
+    }
+
+    public ConversationPath getConversationPath() {
+        return conversationPath;
+    }
+
+    /**
+     * creates the reachBox for this Character
+     *
+     * @return the reach box for this character
+     */
+    Body createReachBox(float posX, float posY) {
+        Body b = this.createBox(posX, posY, width * 1.5f, height * 1.5f, BodyDef.BodyType.KinematicBody, true);
+        Filter filter = b.getFixtureList().get(0).getFilterData();
+        filter.categoryBits = BitFilters.INTERACT_SENSOR;
+        filter.maskBits = BitFilters.PLAYER;
+        b.getFixtureList().get(0).setFilterData(filter);
+        return b;
+    }
+
+    @Override
+    protected Projectile makeProjectile() {
+        return new Bullet(this.game, TexturePath.BULLET, this.world, this.getCenter(), .5f, .5f, this);
     }
 }
