@@ -1,5 +1,6 @@
 package com.mygdx.game.View.overworld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
@@ -32,6 +33,21 @@ public class InputHandler implements InputProcessor {
      */
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.E:
+                if (this.player.canInteract) {
+                    this.overworldScreen.handleInteract();
+                }
+                return true;
+            case Input.Keys.SPACE:
+                if (this.overworldScreen.dialogueOverlay.isVisible()) {
+                    this.overworldScreen.handleInteract();
+                }
+                return true;
+            case Input.Keys.ESCAPE:
+                Gdx.app.exit();
+                return true;
+        }
         return false;
     }
 
@@ -90,10 +106,10 @@ public class InputHandler implements InputProcessor {
 
     /**
      * Called when the touch gesture is cancelled. Reason may be from OS interruption to touch becoming a large surface such as
-     * the user cheek). Relevant on Android and iOS only. The button parameter will be {@link Input.Buttons#LEFT} on iOS.
+     * the user cheek. Relevant on Android and iOS only. The button parameter will be {@link Input.Buttons#LEFT} on iOS.
      *
-     * @param screenX
-     * @param screenY
+     * @param screenX x position
+     * @param screenY y position
      * @param pointer the pointer for the event.
      * @param button  the button
      * @return whether the input was processed
@@ -106,8 +122,8 @@ public class InputHandler implements InputProcessor {
     /**
      * Called when a finger or the mouse was dragged.
      *
-     * @param screenX
-     * @param screenY
+     * @param screenX x
+     * @param screenY y
      * @param pointer the pointer for the event.
      * @return whether the input was processed
      */

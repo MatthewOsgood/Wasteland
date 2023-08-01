@@ -16,8 +16,8 @@ public class SteampunkGame extends Game {
 	public OrthographicCamera camera;
 	private LoadingScreen loadingScreen;
 
-	public static final float VIEW_WIDTH = 32;
-	public static final float VIEW_HEIGHT = 18;
+	public static final float VIEW_WIDTH = 64;
+	public static final float VIEW_HEIGHT = 36;
 	public static final float PPT = 16;
 
 	@Override

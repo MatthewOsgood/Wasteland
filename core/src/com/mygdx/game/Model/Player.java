@@ -17,14 +17,14 @@ public class Player extends Character {
     public boolean canInteract;
     private NPC interactTarget;
 
-    public Player(SteampunkGame game, TexturePath texturePath, World world, float x, float y) {
-        super(game, texturePath, world, x, y);
+    public Player(SteampunkGame game, TexturePath texturePath, World world, Map map, float x, float y) {
+        super(game, texturePath, world, map, x, y);
         this.canInteract = false;
     }
 
     @Override
     protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePath.BULLET, this.world, this.body.getPosition(), .5f, .5f, this);
+        return new Bullet(this.game, TexturePath.BULLET, this.world, this.map, this.body.getPosition(), .5f, .5f, this);
     }
 
     /**

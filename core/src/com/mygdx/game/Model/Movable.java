@@ -3,6 +3,7 @@ package com.mygdx.game.Model;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.SteampunkGame;
@@ -14,7 +15,7 @@ public abstract class Movable implements Entity {
     protected final TextureRegion texture;
     protected final Body body;
     protected final World world;
-    protected Map map;
+    protected final Map map;
     /**
      * width in tiles
      */
@@ -28,23 +29,25 @@ public abstract class Movable implements Entity {
      */
     protected float moveSpeed;
     /**
-     * temp instance to avoid making a new one each time
+     * the angle of this Movable
      */
     protected float angle;
 
 
     /**
-     * @param game the game this character is in
+     * @param game        the game this Movable is in
      * @param texturePath the path to this characters texture
-     * @param world the world this characters body is in
-     * @param posX the x position in tiles
-     * @param posY the y position in tiles
-     * @param width the width in tiles
-     * @param height the height in tiles
-     * @param moveSpeed the movement speed in tiles/second
+     * @param world       the world this Movables body is in
+     * @param map         the map this Movable is one
+     * @param posY        the y position in tiles
+     * @param posX        the x position in tiles
+     * @param width       the width in tiles
+     * @param height      the height in tiles
+     * @param moveSpeed   the movement speed in tiles/second
      */
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, float width, float height, float moveSpeed) {
+    public Movable(SteampunkGame game, TexturePath texturePath, World world, Map map, float posY, float posX, float width, float height, float moveSpeed) {
         this.game = game;
+        this.map = map;
         this.texture = new TextureRegion(game.assetManager.get(texturePath.getPath(), Texture.class));
         this.world = world;
         this.width = width;
@@ -53,16 +56,12 @@ public abstract class Movable implements Entity {
         this.body = this.createBody(posX, posY);
     }
 
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, float width, float height) {
-        this(game, texturePath, world, posX, posY, width, height, 3);
+    public Movable(SteampunkGame game, TexturePath texturePath, World world, Map map, float posY, float width, float height, float posX) {
+        this(game, texturePath, world, map, posY, posX, width, height, 3);
     }
 
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY) {
-        this(game, texturePath, world, posX, posY, 1f, 1f);
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
+    public Movable(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, Map map) {
+        this(game, texturePath, world, map, posY, 1f, 1f, posX);
     }
 
     @Override
@@ -88,14 +87,14 @@ public abstract class Movable implements Entity {
         batch.draw(this.texture,
                 this.body.getPosition().x - this.width / 2,
                 this.body.getPosition().y - this.height / 2,
-                this.getCenter().x, this.getCenter().y,
+                this.width / 2, this.height / 2,
                 this.width, this.height,
                 1f, 1f,
-                this.angle);
+                this.angle * MathUtils.radiansToDegrees);
     }
     @Override
     public void dispose() {
-        this.texture.getTexture().dispose();
+        this.world.destroyBody(this.body);
     }
     @Override
     public Vector2 getCenter() {
@@ -146,4 +145,5 @@ public abstract class Movable implements Entity {
     protected abstract Body createBody(float posX, float posY);
 
     public abstract void update();
+
 }

@@ -2,23 +2,31 @@ package com.mygdx.game.Model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TiledMapPath;
 
 public class Map {
     private final SteampunkGame game;
+    private final World world;
     private final TiledMap tiledMap;
-    private final Player player;
+    private Player player;
     private final Array<NPC> npcs;
     private final Array<Projectile> projectiles;
+    private final Array<Projectile> toDestroy;
 
-    public Map(final SteampunkGame game, TiledMapPath path, Player player) {
+    public Map(final SteampunkGame game, World world, TiledMapPath path) {
         this.game = game;
+        this.world = world;
         this.tiledMap = game.assetManager.get(path.getPath());
-        this.player = player;
         this.npcs = new Array<NPC>();
         this.projectiles = new Array<Projectile>();
+        toDestroy = new Array<Projectile>();
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     /**
@@ -60,8 +68,22 @@ public class Map {
     }
 
     public void update() {
+        for (Projectile p : this.toDestroy) {
+            p.dispose();
+            this.projectiles.removeValue(p, true);
+        }
+        this.toDestroy.clear();
         for (Projectile p : this.projectiles) {
             p.update();
         }
+    }
+
+    /**
+     * sets the given Projectile to be destroyed after the simulation step ends
+     *
+     * @param projectile the projectile to be destroyed
+     */
+    public void setToDestroy(Projectile projectile) {
+        this.toDestroy.add(projectile);
     }
 }

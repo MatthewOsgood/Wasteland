@@ -16,8 +16,8 @@ public class NPC extends Character {
     private final ConversationPath conversationPath;
     private final Body reachBox;
 
-    public NPC(SteampunkGame game, TexturePath texturePath, World world, float x, float y, ConversationPath conversationPath) {
-        super(game, texturePath, world, x, y);
+    public NPC(SteampunkGame game, TexturePath texturePath, World world, Map map, float x, float y, ConversationPath conversationPath) {
+        super(game, texturePath, world, map, x, y);
         this.conversationPath = conversationPath;
         this.reachBox = this.createReachBox(x, y);
     }
@@ -57,6 +57,6 @@ public class NPC extends Character {
 
     @Override
     protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePath.BULLET, this.world, this.getCenter(), .5f, .5f, this);
+        return new Bullet(this.game, TexturePath.BULLET, this.world, this.map, this.getCenter(), .5f, .5f, this);
     }
 }
