@@ -1,6 +1,7 @@
 package com.mygdx.game.View.overworld;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,14 +13,12 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.Model.Map;
-import com.mygdx.game.Model.NPC;
-import com.mygdx.game.Model.Player;
+import com.mygdx.game.Model.*;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.View.dialogue.DialogueOverlay;
 import com.mygdx.game.contactListeners.OverworldContactListener;
 import com.mygdx.game.enums.ConversationPath;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 import com.mygdx.game.enums.TiledMapPath;
 
 import static com.mygdx.game.SteampunkGame.*;
@@ -47,17 +46,13 @@ public class OverworldScreen implements Screen {
         this.debugRenderer = new Box2DDebugRenderer();
 
         this.map = new Map(this.game, this.world, TiledMapPath.TESTMAP);
-        this.player = new Player(game, TexturePath.PLAYER, world, this.map, 15.5f, 15.5f);
+        this.player = new Player(game, TexturePaths.PLAYER, world, this.map, 15.5f, 15.5f);
         this.map.setPlayer(this.player);
-
-        this.map.addNPC(new NPC(this.game, TexturePath.TEST_NPC, this.world, this.map, 11.5f, 11.5f, ConversationPath.TEST));
 
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(this.map.getTiledMap(), 1/PPT, this.batch);
         this.camera = game.camera;
         this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);
 
-        this.centerCamera();
-        this.camera.update();
         this.dialogueOverlay = new DialogueOverlay(game);
         Gdx.input.setInputProcessor(new InputHandler(game, this, this.player, this.map));
     }
@@ -67,8 +62,13 @@ public class OverworldScreen implements Screen {
      */
     @Override
     public void show() {
+        this.camera.update();
+        this.centerCamera();
         MapBodyBuilder.buildShapes(this.map.getTiledMap(), PPT, this.world);
         this.tiledMapRenderer.setView(this.camera);
+
+        this.map.addNPC(new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 11.5f, 11.5f, ConversationPath.TEST));
+        this.map.addEnemy(new TestEnemy(this.game, TexturePaths.TEST_ENEMY, this.world, this.map, 15f, 15f, this.player));
     }
 
     /**
@@ -79,6 +79,7 @@ public class OverworldScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
+        GdxAI.getTimepiece().update(delta);
         this.update();
         this.camera.update();
         this.tiledMapRenderer.setView(game.camera);
@@ -92,7 +93,7 @@ public class OverworldScreen implements Screen {
     }
 
     public void update() {
-        this.world.step(1 / 60f, 6, 2);
+        this.world.step(1 / this.game.REFRESH_RATE, 6, 2);
         this.map.update();
         this.handleMovement();
         if (!this.player.canInteract) this.dialogueOverlay.setVisibility(false);
@@ -151,7 +152,7 @@ public class OverworldScreen implements Screen {
      * centers the camera in the center of the Player
      */
     private void centerCamera() {
-        this.camera.position.lerp(new Vector3(this.player.getCenter(), 0), .2f);
+        this.camera.position.lerp(new Vector3(this.player.getPosition(), 0), .3f);
     }
 
     /**

@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.ConversationPath;
 import com.mygdx.game.enums.SkinPaths;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 
 import java.util.Iterator;
 
@@ -48,7 +48,7 @@ public class DialogueOverlay {
         this.table = new Table();
         this.table.setFillParent(true);
         this.table.bottom();
-        this.player = new Image(this.game.assetManager.get(TexturePath.PLAYER.getPath(), Texture.class));
+        this.player = new Image(this.game.assetManager.get(TexturePaths.PLAYER.getPath(), Texture.class));
         this.isVisible = false;
         this.font = game.font;
 

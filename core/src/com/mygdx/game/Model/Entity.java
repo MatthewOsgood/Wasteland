@@ -13,7 +13,6 @@ public interface Entity extends Disposable {
     void setVelocity(float x, float y);
     void setVelocity(Vector2 v);
     void draw(SpriteBatch batch);
-    Vector2 getCenter();
     Vector2 getVelocity();
 
 }

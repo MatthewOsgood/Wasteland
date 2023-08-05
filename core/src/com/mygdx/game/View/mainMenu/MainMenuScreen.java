@@ -5,22 +5,25 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.View.mainMenu.eventListener.NewGameClickListener;
+import com.mygdx.game.enums.SkinPaths;
 
 public class MainMenuScreen implements Screen {
 
     private final SteampunkGame game;
     private final Stage stage;
+    private final Skin skin;
 
     public MainMenuScreen(SteampunkGame game) {
         this.game = game;
+        this.skin = game.assetManager.get(SkinPaths.TEST.getPath());
         ScreenViewport viewport = new ScreenViewport(game.camera);
         this.stage = new Stage(viewport, game.batch);
         this.stage.addActor(this.makeTable());
@@ -32,18 +35,17 @@ public class MainMenuScreen implements Screen {
      * @return the New Game button
      */
     private TextButton makeNewGame() {
-        TextButton.TextButtonStyle newGameStyle = new TextButton.TextButtonStyle();
-        newGameStyle.fontColor = Color.WHITE;
-        newGameStyle.font = new BitmapFont();
-        TextButton newGame = new TextButton("New Game", newGameStyle);
+        TextButton newGame = new TextButton("New Game", this.skin);
         newGame.addListener(new NewGameClickListener(this.game, this.stage));
         return newGame;
     }
 
     public Table makeTable() {
         Table table = new Table();
-        table.add(this.makeNewGame());
         table.setFillParent(true);
+
+        table.add(this.makeNewGame());
+
         return table;
     }
 

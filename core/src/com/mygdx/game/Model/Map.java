@@ -13,6 +13,7 @@ public class Map {
     private final TiledMap tiledMap;
     private Player player;
     private final Array<NPC> npcs;
+    private final Array<Enemy> enemies;
     private final Array<Projectile> projectiles;
     private final Array<Projectile> toDestroy;
 
@@ -21,6 +22,7 @@ public class Map {
         this.world = world;
         this.tiledMap = game.assetManager.get(path.getPath());
         this.npcs = new Array<NPC>();
+        this.enemies = new Array<Enemy>();
         this.projectiles = new Array<Projectile>();
         toDestroy = new Array<Projectile>();
     }
@@ -38,6 +40,9 @@ public class Map {
         this.player.draw(batch);
         for (NPC npc : this.npcs) {
             npc.draw(batch);
+        }
+        for (Enemy enemy : this.enemies) {
+            enemy.draw(batch);
         }
         for (Projectile p : this.projectiles) {
             p.draw(batch);
@@ -59,6 +64,10 @@ public class Map {
         this.npcs.add(npc);
     }
 
+    public void addEnemy(Enemy enemy) {
+        this.enemies.add(enemy);
+    }
+
     public TiledMap getTiledMap() {
         return tiledMap;
     }
@@ -73,6 +82,9 @@ public class Map {
             this.projectiles.removeValue(p, true);
         }
         this.toDestroy.clear();
+        for (Enemy enemy : this.enemies) {
+            enemy.update();
+        }
         for (Projectile p : this.projectiles) {
             p.update();
         }

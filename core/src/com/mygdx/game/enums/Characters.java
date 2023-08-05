@@ -1,23 +1,22 @@
 package com.mygdx.game.enums;
 
 /**
- * represents all possible characters and their {@link TexturePath}
+ * represents all possible characters and their {@link TexturePaths}
  */
 public enum Characters {
 
-    NULL(TexturePath.NULL, false),
-    PLAYER(TexturePath.PLAYER, true),
-    TEST_NPC(TexturePath.TEST_NPC, false);
+    PLAYER(TexturePaths.PLAYER, true),
+    TEST_NPC(TexturePaths.TEST_NPC, false);
 
-    private final TexturePath texturePath;
+    private final TexturePaths texturePaths;
     private final boolean isPlayer;
-    Characters(TexturePath texturePath, boolean isPlayer) {
-        this.texturePath = texturePath;
+    Characters(TexturePaths texturePaths, boolean isPlayer) {
+        this.texturePaths = texturePaths;
         this.isPlayer = isPlayer;
     }
 
-    public TexturePath AssetPath() {
-        return texturePath;
+    public TexturePaths AssetPath() {
+        return texturePaths;
     }
 
     public boolean isPlayer() {

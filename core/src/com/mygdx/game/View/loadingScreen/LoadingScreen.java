@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.View.mainMenu.MainMenuScreen;
 import com.mygdx.game.enums.SkinPaths;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 import com.mygdx.game.enums.TiledMapPath;
 
 public class LoadingScreen implements Screen {
@@ -31,7 +31,7 @@ public class LoadingScreen implements Screen {
         this.game = game;
         ScreenViewport viewport = new ScreenViewport(game.camera);
         this.stage = new Stage(viewport, game.batch);
-        game.assetManager.load(TexturePath.LOGO.getPath(), Texture.class);
+        game.assetManager.load(TexturePaths.LOGO.getPath(), Texture.class);
         game.assetManager.load(SkinPaths.TEST.getPath(), Skin.class);
         game.assetManager.finishLoading();
         this.skin = game.assetManager.get(SkinPaths.TEST.getPath());
@@ -39,7 +39,7 @@ public class LoadingScreen implements Screen {
     }
 
     private void setStage() {
-        Image logo = new Image(this.game.assetManager.<Texture>get(TexturePath.LOGO.getPath()));
+        Image logo = new Image(this.game.assetManager.<Texture>get(TexturePaths.LOGO.getPath()));
         this.progressBar = new ProgressBar(0f, 1f, .01f, false, this.skin);
         Table table = new Table();
         table.setFillParent(true);
@@ -62,10 +62,15 @@ public class LoadingScreen implements Screen {
      * queues assets to be loaded
      */
     private void loadAssets() {
-        this.game.assetManager.load(TexturePath.PLAYER.getPath(), Texture.class);
-        this.game.assetManager.load(TexturePath.TEST_NPC.getPath(), Texture.class);
-        this.game.assetManager.load(TiledMapPath.TESTMAP.getPath(), TiledMap.class);
-        this.game.assetManager.load(TexturePath.BULLET.getPath(), Texture.class);
+        for (TexturePaths texturePaths : TexturePaths.values()) {
+            this.game.assetManager.load(texturePaths.getPath(), Texture.class);
+        }
+        for (SkinPaths skinPath : SkinPaths.values()) {
+            this.game.assetManager.load(skinPath.getPath(), Skin.class);
+        }
+        for (TiledMapPath tiledMapPath : TiledMapPath.values()) {
+            this.game.assetManager.load(tiledMapPath.getPath(), TiledMap.class);
+        }
     }
 
     private void update(float delta) {

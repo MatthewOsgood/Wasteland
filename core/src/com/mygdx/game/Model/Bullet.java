@@ -7,12 +7,12 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.BitFilters;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 
 public class Bullet extends Projectile {
 
-    public Bullet(SteampunkGame game, TexturePath texturePath, World world, Map map, Vector2 position, float width, float height, Character parent) {
-        super(game, texturePath, world, map, position, width, height, parent);
+    public Bullet(SteampunkGame game, TexturePaths texturePaths, World world, Map map, Vector2 position, float width, float height, Character parent) {
+        super(game, texturePaths, world, map, position, width, height, parent);
         this.moveSpeed = 5;
     }
 

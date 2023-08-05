@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.ConversationPath;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 
 /**
  * represents a playable character
@@ -17,14 +17,14 @@ public class Player extends Character {
     public boolean canInteract;
     private NPC interactTarget;
 
-    public Player(SteampunkGame game, TexturePath texturePath, World world, Map map, float x, float y) {
-        super(game, texturePath, world, map, x, y);
+    public Player(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float x, float y) {
+        super(game, texturePaths, world, map, x, y);
         this.canInteract = false;
     }
 
     @Override
     protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePath.BULLET, this.world, this.map, this.body.getPosition(), .5f, .5f, this);
+        return new Bullet(this.game, TexturePaths.BULLET, this.world, this.map, this.body.getPosition(), .5f, .5f, this);
     }
 
     /**

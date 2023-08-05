@@ -1,14 +1,14 @@
 package com.mygdx.game.enums;
 
-public enum TexturePath {
-    NULL(null),
-    PLAYER("testCharacter.png"),
+public enum TexturePaths {
+    PLAYER("player.png"),
     TEST_NPC("testNPC.png"),
     LOGO("logo.png"),
-    BULLET("bullet.png");
+    BULLET("bullet.png"),
+    TEST_ENEMY("testEnemy.png");
 
     private final String path;
-    TexturePath(String path){
+    TexturePaths(String path){
         this.path = path;
     }
 

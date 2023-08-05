@@ -1,5 +1,6 @@
 package com.mygdx.game.Model;
 
+import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,9 +8,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.SteampunkGame;
-import com.mygdx.game.enums.TexturePath;
+import com.mygdx.game.enums.TexturePaths;
 
-public abstract class Movable implements Entity {
+public abstract class Movable implements Entity, Location<Vector2> {
 
     protected final SteampunkGame game;
     protected final TextureRegion texture;
@@ -36,7 +37,7 @@ public abstract class Movable implements Entity {
 
     /**
      * @param game        the game this Movable is in
-     * @param texturePath the path to this characters texture
+     * @param texturePaths the path to this characters texture
      * @param world       the world this Movables body is in
      * @param map         the map this Movable is one
      * @param posY        the y position in tiles
@@ -45,10 +46,10 @@ public abstract class Movable implements Entity {
      * @param height      the height in tiles
      * @param moveSpeed   the movement speed in tiles/second
      */
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, Map map, float posY, float posX, float width, float height, float moveSpeed) {
+    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float posX, float width, float height, float moveSpeed) {
         this.game = game;
         this.map = map;
-        this.texture = new TextureRegion(game.assetManager.get(texturePath.getPath(), Texture.class));
+        this.texture = new TextureRegion(game.assetManager.get(texturePaths.getPath(), Texture.class));
         this.world = world;
         this.width = width;
         this.height = height;
@@ -56,22 +57,22 @@ public abstract class Movable implements Entity {
         this.body = this.createBody(posX, posY);
     }
 
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, Map map, float posY, float width, float height, float posX) {
-        this(game, texturePath, world, map, posY, posX, width, height, 3);
+    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float width, float height, float posX) {
+        this(game, texturePaths, world, map, posY, posX, width, height, 3);
     }
 
-    public Movable(SteampunkGame game, TexturePath texturePath, World world, float posX, float posY, Map map) {
-        this(game, texturePath, world, map, posY, 1f, 1f, posX);
+    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, float posX, float posY, Map map) {
+        this(game, texturePaths, world, map, posY, 1f, 1f, posX);
     }
 
     @Override
     public void setVelocity(float x, float y) {
-        this.setVelocity(new Vector2(x, y));
+        this.body.setLinearVelocity(x * this.moveSpeed, y * this.moveSpeed);
     }
 
     @Override
     public void setVelocity(Vector2 v) {
-        this.body.setLinearVelocity(v.scl(this.moveSpeed));
+        this.setVelocity(v.x, v.y);
     }
 
     /**
@@ -95,10 +96,6 @@ public abstract class Movable implements Entity {
     @Override
     public void dispose() {
         this.world.destroyBody(this.body);
-    }
-    @Override
-    public Vector2 getCenter() {
-        return this.body.getPosition();
     }
 
     @Override
@@ -145,5 +142,67 @@ public abstract class Movable implements Entity {
     protected abstract Body createBody(float posX, float posY);
 
     public abstract void update();
+
+    /**
+     * Returns the vector indicating the position of this location.
+     */
+    @Override
+    public Vector2 getPosition() {
+        return this.body.getPosition();
+    }
+
+    /**
+     * Returns the float value indicating the orientation of this location. The orientation is the angle in radians representing
+     * the direction that this location is facing.
+     */
+    @Override
+    public float getOrientation() {
+        return this.body.getAngle();
+    }
+
+    /**
+     * Sets the orientation of this location, i.e. the angle in radians representing the direction that this location is facing.
+     *
+     * @param orientation the orientation in radians
+     */
+    @Override
+    public void setOrientation(float orientation) {
+        this.body.setTransform(this.getPosition(), orientation);
+    }
+
+    /**
+     * Returns the angle in radians pointing along the specified vector.
+     *
+     * @param vector the vector
+     */
+    @Override
+    public float vectorToAngle(Vector2 vector) {
+        return SteeringUtils.vectorToAngle(vector);
+    }
+
+    /**
+     * Returns the unit vector in the direction of the specified angle expressed in radians.
+     *
+     * @param outVector the output vector.
+     * @param angle     the angle in radians.
+     * @return the output vector for chaining.
+     */
+    @Override
+    public Vector2 angleToVector(Vector2 outVector, float angle) {
+        return SteeringUtils.angleToVector(outVector, angle);
+    }
+
+    /**
+     * Creates a new location.
+     * <p>
+     * This method is used internally to instantiate locations of the correct type parameter {@code T}. This technique keeps the API
+     * simple and makes the API easier to use with the GWT backend because avoids the use of reflection.
+     *
+     * @return the newly created location.
+     */
+    @Override
+    public Location<Vector2> newLocation() {
+        return new MapLocation();
+    }
 
 }

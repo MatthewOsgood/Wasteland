@@ -19,6 +19,7 @@ public class SteampunkGame extends Game {
 	public static final float VIEW_WIDTH = 64;
 	public static final float VIEW_HEIGHT = 36;
 	public static final float PPT = 16;
+	public float REFRESH_RATE;
 
 	@Override
 	public void create () {
@@ -30,6 +31,11 @@ public class SteampunkGame extends Game {
 		this.camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT);
 		this.loadingScreen = new LoadingScreen(this);
 		this.setScreen(this.loadingScreen);
+	}
+
+	public SteampunkGame setRefreshRate(float refreshRate) {
+		this.REFRESH_RATE = refreshRate;
+		return this;
 	}
 
 	@Override
