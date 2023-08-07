@@ -62,7 +62,7 @@ public abstract class Movable implements Entity, Location<Vector2> {
     }
 
     public Movable(SteampunkGame game, TexturePaths texturePaths, World world, float posX, float posY, Map map) {
-        this(game, texturePaths, world, map, posY, 1f, 1f, posX);
+        this(game, texturePaths, world, map, posY, .75f, .75f, posX);
     }
 
     @Override

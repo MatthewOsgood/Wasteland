@@ -27,7 +27,7 @@ public abstract class Character extends Movable {
     }
 
     public Character(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY) {
-        super(game, texturePaths, world, map, posY, 1f, 1f, posX);
+        super(game, texturePaths, world, map, posY, .75f, .75f, posX);
     }
 
     /**
