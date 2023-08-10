@@ -2,6 +2,7 @@ package com.mygdx.game.Model;
 
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Model.ai.SteeringUtils;
 
 public class MapLocation implements Location<Vector2> {
 

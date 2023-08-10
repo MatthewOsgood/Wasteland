@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.BitFilters;
-import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
 
 /**
@@ -35,7 +35,7 @@ public class Player extends Character {
         this.canInteract = true;
     }
 
-    public ConversationPath getConversationPath() {
+    public ConversationPaths getConversationPath() {
         return this.interactTarget.getConversationPath();
     }
 

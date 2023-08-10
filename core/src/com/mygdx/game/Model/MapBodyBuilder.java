@@ -1,4 +1,4 @@
-package com.mygdx.game.View.overworld;
+package com.mygdx.game.Model;
 
 import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapObject;
@@ -114,4 +114,6 @@ public class MapBodyBuilder {
         chain.createChain(worldVertices);
         return chain;
     }
+
+
 }

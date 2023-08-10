@@ -6,19 +6,19 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.BitFilters;
-import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
 
 /**
  * represents a npc in the overworld
  */
 public class NPC extends Character {
-    private final ConversationPath conversationPath;
+    private final ConversationPaths conversationPaths;
     private final Body reachBox;
 
-    public NPC(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float x, float y, ConversationPath conversationPath) {
+    public NPC(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float x, float y, ConversationPaths conversationPaths) {
         super(game, texturePaths, world, map, x, y);
-        this.conversationPath = conversationPath;
+        this.conversationPaths = conversationPaths;
         this.reachBox = this.createReachBox(x, y);
     }
 
@@ -37,8 +37,8 @@ public class NPC extends Character {
         return b;
     }
 
-    public ConversationPath getConversationPath() {
-        return conversationPath;
+    public ConversationPaths getConversationPath() {
+        return conversationPaths;
     }
 
     /**

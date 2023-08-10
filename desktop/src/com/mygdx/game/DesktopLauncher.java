@@ -13,7 +13,7 @@ public class DesktopLauncher {
 		config.setTitle("Steampunk-Game");
 		Graphics.DisplayMode desktopMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
 		config.setForegroundFPS(desktopMode.refreshRate);
-		config.setFullscreenMode(desktopMode);
+		config.setMaximized(true);
 		new Lwjgl3Application(new SteampunkGame().setRefreshRate(desktopMode.refreshRate), config);
 	}
 }

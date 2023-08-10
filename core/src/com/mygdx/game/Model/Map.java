@@ -24,7 +24,7 @@ public class Map {
         this.npcs = new Array<NPC>();
         this.enemies = new Array<Enemy>();
         this.projectiles = new Array<Projectile>();
-        toDestroy = new Array<Projectile>();
+        this.toDestroy = new Array<Projectile>();
     }
 
     public void setPlayer(Player player) {
@@ -69,7 +69,7 @@ public class Map {
     }
 
     public TiledMap getTiledMap() {
-        return tiledMap;
+        return this.tiledMap;
     }
 
     public void addProjectile(Projectile projectile) {

@@ -17,7 +17,7 @@ import com.mygdx.game.Model.*;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.View.dialogue.DialogueOverlay;
 import com.mygdx.game.contactListeners.OverworldContactListener;
-import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
 import com.mygdx.game.enums.TiledMapPath;
 
@@ -67,7 +67,7 @@ public class OverworldScreen implements Screen {
         MapBodyBuilder.buildShapes(this.map.getTiledMap(), PPT, this.world);
         this.tiledMapRenderer.setView(this.camera);
 
-        this.map.addNPC(new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 11.5f, 11.5f, ConversationPath.TEST));
+        this.map.addNPC(new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 8f, 8f, ConversationPaths.TEST));
         this.map.addEnemy(new TestEnemy(this.game, TexturePaths.TEST_ENEMY, this.world, this.map, 15f, 15f, this.player));
     }
 
@@ -152,7 +152,7 @@ public class OverworldScreen implements Screen {
      * centers the camera in the center of the Player
      */
     private void centerCamera() {
-        this.camera.position.lerp(new Vector3(this.player.getPosition(), 0), .3f);
+        this.camera.position.lerp(new Vector3(this.player.getPosition(), 0), .2f);
     }
 
     /**

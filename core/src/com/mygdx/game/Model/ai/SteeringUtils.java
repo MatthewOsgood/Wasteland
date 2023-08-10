@@ -1,4 +1,4 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.ai;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;

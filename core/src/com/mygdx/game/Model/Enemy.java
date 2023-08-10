@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.ai.RaycastCollision;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TexturePaths;
 
@@ -24,6 +25,14 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     private float maxLinearAcceleration;
     private float maxAngularAcceleration;
     private float maxAngularSpeed;
+    /**
+     * temp x velocity
+     */
+    private float Vx;
+    /**
+     * temp y velocity
+     */
+    private float Vy;
 
     /**
      * @param game        the game this character is in
@@ -38,7 +47,7 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
      */
     public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height, float moveSpeed) {
         super(game, texturePaths, world, map, posX, posY, width, height, moveSpeed);
-        steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+        this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .001f;
         this.maxLinearAcceleration = this.moveSpeed;
@@ -48,7 +57,7 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
 
     public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height) {
         super(game, texturePaths, world, map, posX, posY, width, height);
-        steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+        this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .001f;
         this.maxLinearAcceleration = this.moveSpeed;
@@ -58,7 +67,7 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
 
     public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, Player target) {
         super(game, texturePaths, world, map, posX, posY);
-        steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+        this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .01f;
         this.maxLinearAcceleration = 10000f;
@@ -89,13 +98,16 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
 
     @Override
     public void update() {
-        if (steeringBehavior != null) {
-            steeringBehavior.calculateSteering(this.steeringOutput);
+        if (this.steeringBehavior != null) {
+            this.steeringBehavior.calculateSteering(this.steeringOutput);
             this.applySteering(GdxAI.getTimepiece().getDeltaTime());
         }
     }
 
     private void applySteering(float deltaTime) {
+        if (this.steeringOutput.linear.x > 0) {
+
+        }
         if (!this.steeringOutput.linear.isZero()) {
             this.body.applyForceToCenter(this.steeringOutput.linear.scl(deltaTime), true);
         }

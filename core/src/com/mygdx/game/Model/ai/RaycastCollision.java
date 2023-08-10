@@ -1,4 +1,4 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.ai;
 
 import com.badlogic.gdx.ai.utils.Collision;
 import com.badlogic.gdx.ai.utils.Ray;

@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SteampunkGame;
-import com.mygdx.game.enums.ConversationPath;
+import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.SkinPaths;
 import com.mygdx.game.enums.TexturePaths;
 
@@ -65,8 +65,8 @@ public class DialogueOverlay {
         this.stage.setDebugAll(true);
     }
 
-    public void setConversation(ConversationPath conversationPath) {
-        this.conversation = new Json().fromJson(Conversation.class, new FileHandle(conversationPath.Path())).iterator();
+    public void setConversation(ConversationPaths conversationPaths) {
+        this.conversation = new Json().fromJson(Conversation.class, new FileHandle(conversationPaths.Path())).iterator();
     }
 
     public void draw() {
