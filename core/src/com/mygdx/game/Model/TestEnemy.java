@@ -27,4 +27,6 @@ public class TestEnemy extends Enemy {
     public TestEnemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, Player target) {
         super(game, texturePaths, world, map, posX, posY, target);
     }
+
+
 }
