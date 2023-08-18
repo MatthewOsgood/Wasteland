@@ -4,7 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -27,7 +26,6 @@ public class OverworldScreen implements Screen {
 
     private final SteampunkGame game;
     private final SpriteBatch batch;
-    private final BitmapFont font;
     private final OrthographicCamera camera;
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
@@ -39,14 +37,13 @@ public class OverworldScreen implements Screen {
     public OverworldScreen(SteampunkGame game) {
         this.game = game;
         this.batch = game.batch;
-        this.font = game.font;
         Box2D.init();
         this.world = new World(new Vector2(0, 0), true );
         this.world.setContactListener(new OverworldContactListener());
         this.debugRenderer = new Box2DDebugRenderer();
 
         this.map = new Map(this.game, this.world, TiledMapPath.TESTMAP);
-        this.player = new Player(game, TexturePaths.PLAYER, world, this.map, 15.5f, 15.5f);
+        this.player = new Player(game, TexturePaths.PLAYER, this.world, this.map, 15.5f, 15.5f);
         this.map.setPlayer(this.player);
 
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(this.map.getTiledMap(), 1/PPT, this.batch);
@@ -67,8 +64,10 @@ public class OverworldScreen implements Screen {
         MapBodyBuilder.buildShapes(this.map.getTiledMap(), PPT, this.world);
         this.tiledMapRenderer.setView(this.camera);
 
-        this.map.addNPC(new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 8f, 8f, ConversationPaths.TEST));
-        this.map.addEnemy(new TestEnemy(this.game, TexturePaths.TEST_ENEMY, this.world, this.map, 15f, 15f, this.player));
+        NPC testNPC = new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 8f, 8f, ConversationPaths.TEST);
+        this.map.addNPC(testNPC);
+        Enemy testEnemy = new TestEnemy(this.game, TexturePaths.TEST_ENEMY, this.world, this.map, 15.5f, 10f, this.player);
+        this.map.addEnemy(testEnemy);
     }
 
     /**
@@ -82,12 +81,12 @@ public class OverworldScreen implements Screen {
         GdxAI.getTimepiece().update(delta);
         this.update();
         this.camera.update();
-        this.tiledMapRenderer.setView(game.camera);
+        this.tiledMapRenderer.setView(this.game.camera);
         this.batch.setProjectionMatrix(this.camera.combined);
         this.tiledMapRenderer.render();
-        this.batch.begin();
+//        this.batch.begin();
         this.map.draw(this.batch);
-        this.batch.end();
+//        this.batch.end();
         this.debugRenderer.render(this.world, this.camera.combined);
         this.dialogueOverlay.draw();
     }
@@ -115,36 +114,34 @@ public class OverworldScreen implements Screen {
      * not handled in {@link InputHandler} bc ths makes smoother movement
      */
     private void handleMovement() {
-        float vx = 0;
-        float vy = 0;
+        Vector2 velocity = new Vector2(0, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            vy += 1;
+            velocity.y += 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            vy -= 1;
+            velocity.y -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            vx -= 1;
+            velocity.x -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            vx += 1;
+            velocity.x += 1;
         }
+        velocity.nor();
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            vx *= 2;
-            vy *= 2;
+            velocity.scl(2f);
         }
-        this.move(vx, vy);
+        this.move(velocity);
     }
 
     /**
      * moves the player and the camera together
      * movement is based on delta time and MOVE_SPEED
      *
-     * @param x x-axis movement
-     * @param y y-axis movement
+     * @param velocity the velocity to be set to this player
      */
-    private void move(float x, float y) {
-        this.player.setVelocity(x, y);
+    private void move(Vector2 velocity) {
+        this.player.setVelocity(velocity);
         this.centerCamera();
     }
 

@@ -15,6 +15,6 @@ public class ManhattanHeuristic implements Heuristic<MapNode> {
      */
     @Override
     public float estimate(MapNode startNode, MapNode endNode) {
-        return (endNode.getX() - startNode.getX()) + (endNode.getY() - startNode.getY());
+        return (endNode.getPosition().x - startNode.getPosition().x) + (endNode.getPosition().y - startNode.getPosition().y);
     }
 }

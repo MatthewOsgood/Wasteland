@@ -1,38 +1,35 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
 import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
-import com.badlogic.gdx.ai.steer.behaviors.RaycastObstacleAvoidance;
-import com.badlogic.gdx.ai.steer.behaviors.Seek;
-import com.badlogic.gdx.ai.steer.utils.rays.CentralRayWithWhiskersConfiguration;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.Model.ai.RaycastCollision;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TexturePaths;
 
 public abstract class Enemy extends Character implements Steerable<Vector2> {
 
-    private PrioritySteering<Vector2> steeringBehavior;
+    private final PrioritySteering<Vector2> steeringBehavior;
     private final SteeringAcceleration<Vector2> steeringOutput;
+    private final LinePath<Vector2> path;
     private boolean tagged;
     private float zeroLinearSpeedThreshold;
     private float maxLinearAcceleration;
     private float maxAngularAcceleration;
     private float maxAngularSpeed;
     /**
-     * temp x velocity
+     * temp velocity
      */
-    private float Vx;
-    /**
-     * temp y velocity
-     */
-    private float Vy;
+    private final Vector2 velocity;
+    private final FollowPath<Vector2, LinePath.LinePathParam> followPath;
 
     /**
      * @param game        the game this character is in
@@ -41,42 +38,25 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
      * @param map         the map this character is on
      * @param posX        the x position in tiles
      * @param posY        the y position in tiles
-     * @param width       the width in tiles
-     * @param height      the height in tiles
-     * @param moveSpeed   the movement speed in tiles/second
      */
-    public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height, float moveSpeed) {
-        super(game, texturePaths, world, map, posX, posY, width, height, moveSpeed);
-        this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
-        this.tagged = false;
-        this.zeroLinearSpeedThreshold = .001f;
-        this.maxLinearAcceleration = this.moveSpeed;
-        this.maxAngularAcceleration = 10f;
-        this.maxAngularSpeed = 20f;
-    }
 
-    public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height) {
-        super(game, texturePaths, world, map, posX, posY, width, height);
-        this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
-        this.tagged = false;
-        this.zeroLinearSpeedThreshold = .001f;
-        this.maxLinearAcceleration = this.moveSpeed;
-        this.maxAngularAcceleration = 10f;
-        this.maxAngularSpeed = 20f;
-    }
-
-    public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, Player target) {
+    public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, Movable target) {
         super(game, texturePaths, world, map, posX, posY);
+        this.moveSpeed = 5f;
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .01f;
         this.maxLinearAcceleration = 10000f;
         this.maxAngularAcceleration = 10000f;
         this.maxAngularSpeed = 20f;
+        this.velocity = new Vector2();
+        this.path = new LinePath<Vector2>(map.getWaypoints(this, target));
         this.steeringBehavior = new PrioritySteering<Vector2>(this);
-        CentralRayWithWhiskersConfiguration<Vector2> raycastConfig = new CentralRayWithWhiskersConfiguration<Vector2>(this, 1f, .5f, MathUtils.PI * .25f);
-        this.steeringBehavior.add(new RaycastObstacleAvoidance<Vector2>(this, raycastConfig, new RaycastCollision(world)));
-        this.steeringBehavior.add(new Seek<Vector2>(this, target));
+        this.followPath = new FollowPath<Vector2, LinePath.LinePathParam>(this, this.path, 1);
+        this.steeringBehavior.add(this.followPath);
+//        CentralRayWithWhiskersConfiguration<Vector2> raycastConfig = new CentralRayWithWhiskersConfiguration<Vector2>(this, 1f, .5f, MathUtils.PI * .25f);
+//        this.steeringBehavior.add(new RaycastObstacleAvoidance<Vector2>(this, raycastConfig, new RaycastCollision(world)));
+//        this.steeringBehavior.add(new Seek<Vector2>(this, target));
     }
 
     /**
@@ -100,22 +80,23 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     public void update() {
         if (this.steeringBehavior != null) {
             this.steeringBehavior.calculateSteering(this.steeringOutput);
-            this.applySteering(GdxAI.getTimepiece().getDeltaTime());
+            this.applySteering();
         }
     }
 
-    private void applySteering(float deltaTime) {
+    private void applySteering() {
+//        this.velocity.set(0, 0);
         if (this.steeringOutput.linear.x > 0) {
-
+            this.velocity.x = 1;
+        } else if (this.steeringOutput.linear.x < 0) {
+            this.velocity.x = -1;
         }
-        if (!this.steeringOutput.linear.isZero()) {
-            this.body.applyForceToCenter(this.steeringOutput.linear.scl(deltaTime), true);
+        if (this.steeringOutput.linear.y > 0) {
+            this.velocity.y = 1;
+        } else if (this.steeringOutput.linear.y < 0) {
+            this.velocity.y = -1;
         }
-        if (this.steeringOutput.angular != 0) {
-            this.body.applyTorque(this.steeringOutput.angular * deltaTime, true);
-        }
-        this.body.setLinearVelocity(this.body.getLinearVelocity().limit(this.moveSpeed));
-        this.body.setAngularVelocity(Math.min(this.body.getAngularVelocity(), this.maxAngularSpeed));
+        this.setVelocity(this.velocity.nor());
     }
     /**
      * Returns the vector indicating the linear velocity of this Steerable.
@@ -251,4 +232,17 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
         this.maxAngularAcceleration = maxAngularAcceleration;
     }
 
+    public void setPath(Array<Vector2> waypoints) {
+        if (waypoints.size > 2) {
+            this.path.createPath(waypoints);
+//            this.followPath.setPathOffset(this.path.getLength());
+        }
+    }
+
+    public void drawPath(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.RED);
+        for (LinePath.Segment<Vector2> segment : this.path.getSegments()) {
+            shapeRenderer.line(segment.getBegin(), segment.getEnd());
+        }
+    }
 }

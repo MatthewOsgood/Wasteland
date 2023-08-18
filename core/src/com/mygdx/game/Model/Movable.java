@@ -34,6 +34,7 @@ public abstract class Movable implements Entity, Location<Vector2> {
      * the angle of this Movable
      */
     protected float angle;
+    private final Vector2 tmpVelocity;
 
 
     /**
@@ -56,6 +57,7 @@ public abstract class Movable implements Entity, Location<Vector2> {
         this.height = height;
         this.moveSpeed = moveSpeed;
         this.body = this.createBody(posX, posY);
+        this.tmpVelocity = new Vector2();
     }
 
     public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float width, float height, float posX) {
@@ -68,12 +70,13 @@ public abstract class Movable implements Entity, Location<Vector2> {
 
     @Override
     public void setVelocity(float x, float y) {
-        this.body.setLinearVelocity(x * this.moveSpeed, y * this.moveSpeed);
+        this.tmpVelocity.set(x, y);
+        this.setVelocity(this.tmpVelocity);
     }
 
     @Override
     public void setVelocity(Vector2 v) {
-        this.setVelocity(v.x, v.y);
+        this.body.setLinearVelocity(v.scl(this.moveSpeed));
     }
 
     /**

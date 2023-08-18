@@ -1,9 +1,15 @@
 package com.mygdx.game.Model;
 
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
+import com.mygdx.game.Model.ai.pfa.MapGraph;
+import com.mygdx.game.Model.ai.pfa.MapNode;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TiledMapPath;
 
@@ -16,6 +22,7 @@ public class Map {
     private final Array<Enemy> enemies;
     private final Array<Projectile> projectiles;
     private final Array<Projectile> toDestroy;
+    private final MapGraph graph;
 
     public Map(final SteampunkGame game, World world, TiledMapPath path) {
         this.game = game;
@@ -25,18 +32,22 @@ public class Map {
         this.enemies = new Array<Enemy>();
         this.projectiles = new Array<Projectile>();
         this.toDestroy = new Array<Projectile>();
+        this.graph = new MapGraph(new ManhattanHeuristic(), this.tiledMap);
     }
 
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
     /**
      * draws this map and everything on it
      *
      * @param batch the {@link SpriteBatch} this map will be drawn on
      */
     public void draw(SpriteBatch batch) {
+        batch.begin();
         this.player.draw(batch);
         for (NPC npc : this.npcs) {
             npc.draw(batch);
@@ -47,6 +58,15 @@ public class Map {
         for (Projectile p : this.projectiles) {
             p.draw(batch);
         }
+        batch.end();
+        this.shapeRenderer.setProjectionMatrix(this.game.camera.combined);
+        this.shapeRenderer.setAutoShapeType(true);
+        this.shapeRenderer.begin();
+        this.graph.draw(this.shapeRenderer);
+        for (Enemy enemy : this.enemies) {
+            enemy.drawPath(this.shapeRenderer);
+        }
+        this.shapeRenderer.end();
     }
 
     public void dispose() {
@@ -83,6 +103,7 @@ public class Map {
         }
         this.toDestroy.clear();
         for (Enemy enemy : this.enemies) {
+            enemy.setPath(this.getWaypoints(enemy, this.player));
             enemy.update();
         }
         for (Projectile p : this.projectiles) {
@@ -97,5 +118,21 @@ public class Map {
      */
     public void setToDestroy(Projectile projectile) {
         this.toDestroy.add(projectile);
+    }
+
+    /**
+     * gets the path between the given Movables as a list of waypoints
+     *
+     * @param from the start position
+     * @param to the end position
+     * @return a list of points that lead to the end position
+     */
+    public Array<Vector2> getWaypoints(Movable from, Movable to) {
+        GraphPath<MapNode> graphPath = this.graph.findPath(this.graph.getNodeAt(from.getPosition()), this.graph.getNodeAt(to.getPosition()));
+        Array<Vector2> waypoints = new Array<Vector2>(graphPath.getCount());
+        for (MapNode node : graphPath) {
+            waypoints.add(node.getWorldPosition());
+        }
+        return waypoints;
     }
 }
