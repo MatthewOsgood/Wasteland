@@ -1,15 +1,17 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Model.ai.RaycastCollision;
 import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
 import com.mygdx.game.Model.ai.pfa.MapGraph;
 import com.mygdx.game.Model.ai.pfa.MapNode;
+import com.mygdx.game.Model.ai.pfa.SmoothablePath;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TiledMapPath;
 
@@ -23,6 +25,7 @@ public class Map {
     private final Array<Projectile> projectiles;
     private final Array<Projectile> toDestroy;
     private final MapGraph graph;
+    private final PathSmoother<MapNode, Vector2> pathSmoother;
 
     public Map(final SteampunkGame game, World world, TiledMapPath path) {
         this.game = game;
@@ -33,6 +36,7 @@ public class Map {
         this.projectiles = new Array<Projectile>();
         this.toDestroy = new Array<Projectile>();
         this.graph = new MapGraph(new ManhattanHeuristic(), this.tiledMap);
+        this.pathSmoother = new PathSmoother<MapNode, Vector2>(new RaycastCollision(this.world));
     }
 
     public void setPlayer(Player player) {
@@ -128,7 +132,8 @@ public class Map {
      * @return a list of points that lead to the end position
      */
     public Array<Vector2> getWaypoints(Movable from, Movable to) {
-        GraphPath<MapNode> graphPath = this.graph.findPath(this.graph.getNodeAt(from.getPosition()), this.graph.getNodeAt(to.getPosition()));
+        SmoothablePath graphPath = this.graph.findPath(this.graph.getNodeAt(from.getPosition()), this.graph.getNodeAt(to.getPosition()));
+        this.pathSmoother.smoothPath(graphPath);
         Array<Vector2> waypoints = new Array<Vector2>(graphPath.getCount());
         for (MapNode node : graphPath) {
             waypoints.add(node.getWorldPosition());

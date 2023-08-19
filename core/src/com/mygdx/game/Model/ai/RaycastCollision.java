@@ -29,7 +29,7 @@ public class RaycastCollision implements RaycastCollisionDetector<Vector2>, RayC
      */
     @Override
     public boolean collides(Ray<Vector2> ray) {
-        return this.findCollision(null, ray);
+        return this.findCollision(this.collision, ray);
     }
 
     /**

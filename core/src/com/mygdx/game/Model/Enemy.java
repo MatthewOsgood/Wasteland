@@ -4,14 +4,18 @@ import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
 import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
+import com.badlogic.gdx.ai.steer.behaviors.RaycastObstacleAvoidance;
+import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.ai.steer.utils.rays.CentralRayWithWhiskersConfiguration;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Model.ai.RaycastCollision;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TexturePaths;
 
@@ -54,9 +58,9 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
         this.steeringBehavior = new PrioritySteering<Vector2>(this);
         this.followPath = new FollowPath<Vector2, LinePath.LinePathParam>(this, this.path, 1);
         this.steeringBehavior.add(this.followPath);
-//        CentralRayWithWhiskersConfiguration<Vector2> raycastConfig = new CentralRayWithWhiskersConfiguration<Vector2>(this, 1f, .5f, MathUtils.PI * .25f);
-//        this.steeringBehavior.add(new RaycastObstacleAvoidance<Vector2>(this, raycastConfig, new RaycastCollision(world)));
-//        this.steeringBehavior.add(new Seek<Vector2>(this, target));
+        CentralRayWithWhiskersConfiguration<Vector2> raycastConfig = new CentralRayWithWhiskersConfiguration<Vector2>(this, 1f, .5f, MathUtils.PI * .25f);
+        this.steeringBehavior.add(new RaycastObstacleAvoidance<Vector2>(this, raycastConfig, new RaycastCollision(world)));
+        this.steeringBehavior.add(new Seek<Vector2>(this, target));
     }
 
     /**
@@ -85,7 +89,6 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     }
 
     private void applySteering() {
-//        this.velocity.set(0, 0);
         if (this.steeringOutput.linear.x > 0) {
             this.velocity.x = 1;
         } else if (this.steeringOutput.linear.x < 0) {
@@ -235,14 +238,13 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     public void setPath(Array<Vector2> waypoints) {
         if (waypoints.size > 2) {
             this.path.createPath(waypoints);
-//            this.followPath.setPathOffset(this.path.getLength());
         }
     }
 
     public void drawPath(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.RED);
-        for (LinePath.Segment<Vector2> segment : this.path.getSegments()) {
-            shapeRenderer.line(segment.getBegin(), segment.getEnd());
-        }
+//        shapeRenderer.setColor(Color.RED);
+//        for (LinePath.Segment<Vector2> segment : this.path.getSegments()) {
+//            shapeRenderer.line(segment.getBegin(), segment.getEnd());
+//        }
     }
 }

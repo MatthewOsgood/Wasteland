@@ -1,8 +1,6 @@
 package com.mygdx.game.Model.ai.pfa;
 
 import com.badlogic.gdx.ai.pfa.Connection;
-import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
-import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.Heuristic;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
@@ -22,13 +20,13 @@ public class MapGraph implements IndexedGraph<MapNode> {
     private final Heuristic<MapNode> heuristic;
     private final Array<MapNode> nodes;
     private int nodeCount;
-    private final GraphPath<MapNode> path;
+    private final SmoothablePath path;
 
     public MapGraph(Heuristic<MapNode> heuristic, TiledMap tiledMap) {
         this.heuristic = heuristic;
         this.nodes = new Array<MapNode>();
         this.nodeCount = 0;
-        this.path = new DefaultGraphPath<MapNode>();
+        this.path = new SmoothablePath();
         this.init(tiledMap);
         this.pathFinder = new IndexedAStarPathFinder<MapNode>(this);
     }
@@ -76,7 +74,7 @@ public class MapGraph implements IndexedGraph<MapNode> {
         node2.addConnection(new MapConnection(node2, node1));
     }
 
-    public GraphPath<MapNode> findPath(MapNode startNode, MapNode endNode) {
+    public SmoothablePath findPath(MapNode startNode, MapNode endNode) {
         this.path.clear();
         this.pathFinder.searchNodePath(startNode, endNode, this.heuristic, this.path);
         return this.path;
@@ -159,8 +157,8 @@ public class MapGraph implements IndexedGraph<MapNode> {
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
-        for (MapNode node : this.nodes) {
-            node.draw(shapeRenderer);
-        }
+//        for (MapNode node : this.nodes) {
+//            node.draw(shapeRenderer);
+//        }
     }
 }
