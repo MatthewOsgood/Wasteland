@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Model.ai.RaycastCollision;
-import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
-import com.mygdx.game.Model.ai.pfa.MapGraph;
-import com.mygdx.game.Model.ai.pfa.MapNode;
-import com.mygdx.game.Model.ai.pfa.SmoothablePath;
+import com.mygdx.game.Model.ai.pfa.*;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TiledMapPath;
 
@@ -23,7 +20,7 @@ public class Map {
     private final Array<NPC> npcs;
     private final Array<Enemy> enemies;
     private final Array<Projectile> projectiles;
-    private final Array<Projectile> toDestroy;
+    private final Array<Movable> toDestroy;
     private final MapGraph graph;
     private final PathSmoother<MapNode, Vector2> pathSmoother;
 
@@ -34,7 +31,7 @@ public class Map {
         this.npcs = new Array<NPC>();
         this.enemies = new Array<Enemy>();
         this.projectiles = new Array<Projectile>();
-        this.toDestroy = new Array<Projectile>();
+        this.toDestroy = new Array<Movable>();
         this.graph = new MapGraph(new ManhattanHeuristic(), this.tiledMap);
         this.pathSmoother = new PathSmoother<MapNode, Vector2>(new RaycastCollision(this.world));
     }
@@ -63,13 +60,13 @@ public class Map {
             p.draw(batch);
         }
         batch.end();
-        this.shapeRenderer.setProjectionMatrix(this.game.camera.combined);
-        this.shapeRenderer.setAutoShapeType(true);
-        this.shapeRenderer.begin();
-        this.graph.draw(this.shapeRenderer);
-        for (Enemy enemy : this.enemies) {
-            enemy.drawPath(this.shapeRenderer);
-        }
+//        this.shapeRenderer.setProjectionMatrix(this.game.camera.combined);
+//        this.shapeRenderer.setAutoShapeType(true);
+//        this.shapeRenderer.begin();
+//        this.graph.draw(this.shapeRenderer);
+//        for (Enemy enemy : this.enemies) {
+//            enemy.drawPath(this.shapeRenderer);
+//        }
         this.shapeRenderer.end();
     }
 
@@ -101,9 +98,13 @@ public class Map {
     }
 
     public void update() {
-        for (Projectile p : this.toDestroy) {
-            p.dispose();
-            this.projectiles.removeValue(p, true);
+        for (Movable m : this.toDestroy) {
+            m.dispose();
+            if (m instanceof Projectile) {
+                this.projectiles.removeValue((Projectile) m, true);
+            } else if (m instanceof Enemy) {
+                this.enemies.removeValue((Enemy) m, true);
+            }
         }
         this.toDestroy.clear();
         for (Enemy enemy : this.enemies) {
@@ -118,10 +119,10 @@ public class Map {
     /**
      * sets the given Projectile to be destroyed after the simulation step ends
      *
-     * @param projectile the projectile to be destroyed
+     * @param movable the movable to be destroyed
      */
-    public void setToDestroy(Projectile projectile) {
-        this.toDestroy.add(projectile);
+    public void setToDestroy(Movable movable) {
+        this.toDestroy.add(movable);
     }
 
     /**

@@ -29,7 +29,7 @@ public class NPC extends Character {
      */
     @Override
     protected Body createBody(float posX, float posY) {
-        Body b = this.createBox(posX, posY, width, height, BodyDef.BodyType.StaticBody, false);
+        Body b = this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.StaticBody, false);
         Filter filter = b.getFixtureList().get(0).getFilterData();
         filter.categoryBits = BitFilters.NPC;
         filter.maskBits = BitFilters.ENEMY | BitFilters.OBSTACLE | BitFilters.ENEMY_PROJECTILE;
@@ -38,7 +38,7 @@ public class NPC extends Character {
     }
 
     public ConversationPaths getConversationPath() {
-        return conversationPaths;
+        return this.conversationPaths;
     }
 
     /**
@@ -47,7 +47,7 @@ public class NPC extends Character {
      * @return the reach box for this character
      */
     Body createReachBox(float posX, float posY) {
-        Body b = this.createBox(posX, posY, width * 1.5f, height * 1.5f, BodyDef.BodyType.KinematicBody, true);
+        Body b = this.createBox(posX, posY, this.width * 1.5f, this.height * 1.5f, BodyDef.BodyType.KinematicBody, true);
         Filter filter = b.getFixtureList().get(0).getFilterData();
         filter.categoryBits = BitFilters.INTERACT_SENSOR;
         filter.maskBits = BitFilters.PLAYER;

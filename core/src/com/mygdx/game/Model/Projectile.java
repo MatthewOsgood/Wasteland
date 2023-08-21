@@ -21,9 +21,5 @@ public abstract class Projectile extends Movable {
         this.body.setTransform(this.getPosition(), this.angle);
     }
 
-    public void setToDestroy() {
-        this.map.setToDestroy(this);
-    }
-
 }
 

@@ -46,7 +46,7 @@ public class Player extends Character {
      */
     @Override
     protected Body createBody(float posX, float posY) {
-        Body b = this.createBox(posX, posY, width, height, BodyDef.BodyType.DynamicBody, false);
+        Body b = this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.DynamicBody, false);
         Filter filter = b.getFixtureList().get(0).getFilterData();
         filter.categoryBits = BitFilters.PLAYER;
         filter.maskBits = BitFilters.ENEMY | BitFilters.OBSTACLE | BitFilters.ENEMY_PROJECTILE | BitFilters.INTERACT_SENSOR;

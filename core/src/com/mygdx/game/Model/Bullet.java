@@ -27,7 +27,7 @@ public class Bullet extends Projectile {
     protected Body createBody(float posX, float posY) {
         Body body = this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.DynamicBody, false);
         Filter filter = body.getFixtureList().get(0).getFilterData();
-        filter.categoryBits = BitFilters.FRIENDLY_PROJECTILE;
+        filter.categoryBits = BitFilters.PLAYER_PROJECTILE;
         filter.maskBits = BitFilters.ENEMY | BitFilters.OBSTACLE;
         body.getFixtureList().get(0).setFilterData(filter);
         return body;

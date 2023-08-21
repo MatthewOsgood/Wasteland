@@ -10,14 +10,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.TexturePaths;
 
 public abstract class Enemy extends Character implements Steerable<Vector2> {
 
-    private final PrioritySteering<Vector2> steeringBehavior;
+    private PrioritySteering<Vector2> steeringBehavior;
     private final SteeringAcceleration<Vector2> steeringOutput;
     private final LinePath<Vector2> path;
     private boolean tagged;
@@ -63,7 +65,12 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
      */
     @Override
     protected Body createBody(float posX, float posY) {
-        return this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.DynamicBody, false);
+        Body b = this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.DynamicBody, false);
+        Filter filter = b.getFixtureList().get(0).getFilterData();
+        filter.categoryBits = BitFilters.ENEMY;
+        filter.maskBits = BitFilters.PLAYER | BitFilters.OBSTACLE | BitFilters.PLAYER_PROJECTILE;
+        b.getFixtureList().get(0).setFilterData(filter);
+        return b;
     }
 
     @Override
@@ -77,6 +84,12 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
             this.steeringBehavior.calculateSteering(this.steeringOutput);
             this.applySteering();
         }
+    }
+
+    @Override
+    public void dispose() {
+        this.world.destroyBody(this.body);
+        this.steeringBehavior = null;
     }
 
     private void applySteering() {

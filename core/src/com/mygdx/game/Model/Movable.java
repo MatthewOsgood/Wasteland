@@ -209,4 +209,8 @@ public abstract class Movable implements Entity, Location<Vector2> {
         return new MapLocation();
     }
 
+    @Override
+    public void setToDestroy() {
+        this.map.setToDestroy(this);
+    }
 }

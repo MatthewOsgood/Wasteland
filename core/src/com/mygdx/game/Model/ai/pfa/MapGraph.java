@@ -157,8 +157,8 @@ public class MapGraph implements IndexedGraph<MapNode> {
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
-//        for (MapNode node : this.nodes) {
-//            node.draw(shapeRenderer);
-//        }
+        for (MapNode node : this.nodes) {
+            node.draw(shapeRenderer);
+        }
     }
 }
