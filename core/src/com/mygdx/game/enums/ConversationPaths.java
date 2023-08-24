@@ -2,7 +2,7 @@ package com.mygdx.game.enums;
 
 public enum ConversationPaths {
 
-    TEST("testConvo.txt");
+    TEST("testConvo.dlg");
 
     private final String path;
 

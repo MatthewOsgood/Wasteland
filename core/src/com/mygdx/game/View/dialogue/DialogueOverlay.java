@@ -101,7 +101,7 @@ public class DialogueOverlay {
     }
 
     public boolean isVisible() {
-        return isVisible;
+        return this.isVisible;
     }
 
     public void dispose() {

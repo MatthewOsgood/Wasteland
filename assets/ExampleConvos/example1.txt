@@ -1,0 +1,3 @@
+TEST_NPC: test test test test
+PLAYER: iferailnfrnijerfjn fqwfa
+TEST_NPC: Table is a WidgetGroup that sets the position and size of its children using a logical table,
