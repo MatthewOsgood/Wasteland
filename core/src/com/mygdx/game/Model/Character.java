@@ -44,6 +44,5 @@ public abstract class Character extends Movable {
 
     @Override
     public void update() {
-
     }
 }
