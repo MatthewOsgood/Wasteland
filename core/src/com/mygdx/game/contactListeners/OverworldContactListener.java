@@ -15,14 +15,14 @@ public class OverworldContactListener implements ContactListener {
         if (a.getUserData() instanceof Projectile) {
             ((Projectile) a.getUserData()).setToDestroy();
             if (b.getUserData() instanceof Movable) {
-                ((Movable) b.getUserData()).setToDestroy();
+                ((Movable) b.getUserData()).damage(((Projectile) a.getUserData()).getDamage());
             }
             return;
         }
         if (b.getUserData() instanceof Projectile) {
             ((Projectile) b.getUserData()).setToDestroy();
             if (a.getUserData() instanceof Movable) {
-                ((Movable) a.getUserData()).setToDestroy();
+                ((Movable) a.getUserData()).damage(((Projectile) b.getUserData()).getDamage());
             }
             return;
         }

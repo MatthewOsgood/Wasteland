@@ -12,7 +12,7 @@ import com.mygdx.game.enums.TexturePaths;
 public class Bullet extends Projectile {
 
     public Bullet(SteampunkGame game, TexturePaths texturePaths, World world, Map map, Vector2 position, float width, float height, Character parent) {
-        super(game, texturePaths, world, map, position, width, height, parent);
+        super(game, texturePaths, world, map, position, width, height, 20, parent);
         this.moveSpeed = 5;
     }
 

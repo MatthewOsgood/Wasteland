@@ -19,15 +19,15 @@ public abstract class Character extends Movable {
      * @param moveSpeed the movement speed in tiles/second
      */
     public Character(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height, float moveSpeed) {
-        super(game, texturePaths, world, map, posY, posX, width, height, moveSpeed);
+        super(game, texturePaths, world, map, posY, posX, width, height, moveSpeed, 100);
     }
 
     public Character(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height) {
-        super(game, texturePaths, world, map, posY, posX, width, height, 3);
+        super(game, texturePaths, world, map, posY, posX, width, height, 3, 100);
     }
 
     public Character(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY) {
-        super(game, texturePaths, world, map, posY, .75f, .75f, posX);
+        super(game, texturePaths, world, map, posX, posY, .75f, .75f);
     }
 
     /**

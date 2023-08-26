@@ -35,6 +35,7 @@ public abstract class Movable implements Entity, Location<Vector2> {
      */
     protected float angle;
     private final Vector2 tmpVelocity;
+    private int health;
 
 
     /**
@@ -48,7 +49,7 @@ public abstract class Movable implements Entity, Location<Vector2> {
      * @param height      the height in tiles
      * @param moveSpeed   the movement speed in tiles/second
      */
-    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float posX, float width, float height, float moveSpeed) {
+    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float posX, float width, float height, float moveSpeed, int health) {
         this.game = game;
         this.map = map;
         this.texture = new TextureRegion(game.assetManager.get(texturePaths.getPath(), Texture.class));
@@ -56,16 +57,17 @@ public abstract class Movable implements Entity, Location<Vector2> {
         this.width = width;
         this.height = height;
         this.moveSpeed = moveSpeed;
+        this.health = health;
         this.body = this.createBody(posX, posY);
         this.tmpVelocity = new Vector2();
     }
 
-    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float width, float height, float posX) {
-        this(game, texturePaths, world, map, posY, posX, width, height, 3);
+    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height) {
+        this(game, texturePaths, world, map, posY, posX, width, height, 3, 100);
     }
 
     public Movable(SteampunkGame game, TexturePaths texturePaths, World world, float posX, float posY, Map map) {
-        this(game, texturePaths, world, map, posY, .75f, .75f, posX);
+        this(game, texturePaths, world, map, posX, posY, .75f, .75f);
     }
 
     @Override
@@ -146,6 +148,19 @@ public abstract class Movable implements Entity, Location<Vector2> {
     protected abstract Body createBody(float posX, float posY);
 
     public abstract void update();
+
+    /**
+     * deals the given amount of damage to this
+     * if the health reaches 0 then this is destroyed
+     *
+     * @param dmg the amount of damage to be dealt
+     */
+    public void damage(int dmg) {
+        this.health -= dmg;
+        if (this.health <= 0) {
+            this.setToDestroy();
+        }
+    }
 
     /**
      * Returns the vector indicating the position of this location.

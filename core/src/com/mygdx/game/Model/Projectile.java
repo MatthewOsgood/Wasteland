@@ -9,10 +9,12 @@ import com.mygdx.game.enums.TexturePaths;
 public abstract class Projectile extends Movable {
 
     protected final Character parent;
+    private final int damage;
 
-    public Projectile(SteampunkGame game, TexturePaths texturePaths, World world, Map map, Vector2 position, float width, float height, Character parent) {
-        super(game, texturePaths, world, map, position.y, width, height, position.x);
+    public Projectile(SteampunkGame game, TexturePaths texturePaths, World world, Map map, Vector2 position, float width, float height, int damage, Character parent) {
+        super(game, texturePaths, world, map, position.x, position.y, width, height);
         this.parent = parent;
+        this.damage = damage;
     }
 
     @Override
@@ -21,5 +23,8 @@ public abstract class Projectile extends Movable {
         this.body.setTransform(this.getPosition(), this.angle);
     }
 
+    public int getDamage() {
+        return this.damage;
+    }
 }
 
