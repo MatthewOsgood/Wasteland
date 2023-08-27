@@ -1,20 +1,46 @@
 package com.mygdx.game.Model;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TexturePaths;
 
-public abstract class Projectile extends Movable {
+public abstract class Projectile<T extends Projectile<T>> extends Movable<T> {
 
-    protected final Character parent;
     private final int damage;
 
-    public Projectile(SteampunkGame game, TexturePaths texturePaths, World world, Map map, Vector2 position, float width, float height, int damage, Character parent) {
-        super(game, texturePaths, world, map, position.x, position.y, width, height);
-        this.parent = parent;
+    /**
+     * @param game         the game this Movable is in
+     * @param map          the map this Movable is one
+     * @param world        the world this Movables body is in
+     * @param texturePaths the path to this characters texture
+     * @param posX         the x position in tiles
+     * @param posY         the y position in tiles
+     * @param width        the width in tiles
+     * @param height       the height in tiles
+     * @param moveSpeed    the movement speed in tiles/second
+     * @param health       the health of this
+     * @param damage       the amount of damage this projectile deals
+     */
+    public Projectile(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, int damage) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
         this.damage = damage;
+    }
+
+    public static abstract class Builder<U extends Projectile<U>, V extends Builder<U, V>> extends Movable.Builder<U, V> {
+
+        protected int damage = 1;
+
+        /**
+         * default 1
+         *
+         * @param damage the amount of damage this projectile does
+         * @return this for chaining
+         */
+        public V damage(int damage) {
+            this.damage = damage;
+            return this.self();
+        }
     }
 
     @Override

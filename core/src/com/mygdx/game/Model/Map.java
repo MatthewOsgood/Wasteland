@@ -8,7 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Model.ai.RaycastCollision;
-import com.mygdx.game.Model.ai.pfa.*;
+import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
+import com.mygdx.game.Model.ai.pfa.MapGraph;
+import com.mygdx.game.Model.ai.pfa.MapNode;
+import com.mygdx.game.Model.ai.pfa.SmoothablePath;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TiledMapPath;
 
@@ -18,9 +21,9 @@ public class Map {
     private final TiledMap tiledMap;
     private Player player;
     private final Array<NPC> npcs;
-    private final Array<Enemy> enemies;
-    private final Array<Projectile> projectiles;
-    private final Array<Movable> toDestroy;
+    private final Array<Enemy<?>> enemies;
+    private final Array<Projectile<?>> projectiles;
+    private final Array<Movable<?>> toDestroy;
     private final MapGraph graph;
     private final PathSmoother<MapNode, Vector2> pathSmoother;
 
@@ -29,9 +32,9 @@ public class Map {
         this.world = world;
         this.tiledMap = game.assetManager.get(path.getPath());
         this.npcs = new Array<NPC>();
-        this.enemies = new Array<Enemy>();
-        this.projectiles = new Array<Projectile>();
-        this.toDestroy = new Array<Movable>();
+        this.enemies = new Array<Enemy<?>>();
+        this.projectiles = new Array<Projectile<?>>();
+        this.toDestroy = new Array<Movable<?>>();
         this.graph = new MapGraph(new ManhattanHeuristic(), this.tiledMap);
         this.pathSmoother = new PathSmoother<MapNode, Vector2>(new RaycastCollision(this.world));
     }
@@ -53,10 +56,10 @@ public class Map {
         for (NPC npc : this.npcs) {
             npc.draw(batch);
         }
-        for (Enemy enemy : this.enemies) {
+        for (Enemy<?> enemy : this.enemies) {
             enemy.draw(batch);
         }
-        for (Projectile p : this.projectiles) {
+        for (Projectile<?> p : this.projectiles) {
             p.draw(batch);
         }
         batch.end();
@@ -76,8 +79,11 @@ public class Map {
             npc.dispose();
         }
         this.player.dispose();
-        for (Projectile p : this.projectiles) {
+        for (Projectile<?> p : this.projectiles) {
             p.dispose();
+        }
+        for (Enemy<?> e : this.enemies){
+            e.dispose();
         }
     }
 
@@ -85,7 +91,7 @@ public class Map {
         this.npcs.add(npc);
     }
 
-    public void addEnemy(Enemy enemy) {
+    public void addEnemy(Enemy<?> enemy) {
         this.enemies.add(enemy);
     }
 
@@ -93,25 +99,25 @@ public class Map {
         return this.tiledMap;
     }
 
-    public void addProjectile(Projectile projectile) {
+    public void addProjectile(Projectile<?> projectile) {
         this.projectiles.add(projectile);
     }
 
     public void update() {
-        for (Movable m : this.toDestroy) {
+        for (Movable<?> m : this.toDestroy) {
             m.dispose();
             if (m instanceof Projectile) {
-                this.projectiles.removeValue((Projectile) m, true);
+                this.projectiles.removeValue((Projectile<?>) m, true);
             } else if (m instanceof Enemy) {
-                this.enemies.removeValue((Enemy) m, true);
+                this.enemies.removeValue((Enemy<?>) m, true);
             }
         }
         this.toDestroy.clear();
-        for (Enemy enemy : this.enemies) {
+        for (Enemy<?> enemy : this.enemies) {
             enemy.setPath(this.getWaypoints(enemy, this.player));
             enemy.update();
         }
-        for (Projectile p : this.projectiles) {
+        for (Projectile<?> p : this.projectiles) {
             p.update();
         }
     }
@@ -121,7 +127,7 @@ public class Map {
      *
      * @param movable the movable to be destroyed
      */
-    public void setToDestroy(Movable movable) {
+    public void setToDestroy(Movable<?> movable) {
         this.toDestroy.add(movable);
     }
 
@@ -132,7 +138,7 @@ public class Map {
      * @param to the end position
      * @return a list of points that lead to the end position
      */
-    public Array<Vector2> getWaypoints(Movable from, Movable to) {
+    public Array<Vector2> getWaypoints(Movable<?> from, Movable<?> to) {
         SmoothablePath graphPath = this.graph.findPath(this.graph.getNodeAt(from.getPosition()), this.graph.getNodeAt(to.getPosition()));
         this.pathSmoother.smoothPath(graphPath);
         Array<Vector2> waypoints = new Array<Vector2>(graphPath.getCount());

@@ -12,19 +12,59 @@ import com.mygdx.game.enums.TexturePaths;
 /**
  * represents a playable character
  */
-public class Player extends Character {
+public class Player extends Character<Player> {
 
     public boolean canInteract;
     private NPC interactTarget;
 
-    public Player(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float x, float y) {
-        super(game, texturePaths, world, map, x, y);
-        this.canInteract = false;
+    /**
+     * @param game         the game this Movable is in
+     * @param map          the map this Movable is one
+     * @param world        the world this Movables body is in
+     * @param texturePaths the path to this characters texture
+     * @param posX         the x position in tiles
+     * @param posY         the y position in tiles
+     * @param width        the width in tiles
+     * @param height       the height in tiles
+     * @param moveSpeed    the movement speed in tiles/second
+     * @param health       the health of this
+     */
+    public Player(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    }
+
+    public static class Builder extends Movable.Builder<Player, Builder> {
+
+        /**
+         * when using this method the texturePath must be already set
+         * with {@link #set(TexturePaths)} or {@link #player() template}
+         *
+         * @param game  the game
+         * @param map   the map
+         * @param world the world
+         * @return the final product
+         */
+        @Override
+        public Player build(SteampunkGame game, Map map, World world) {
+            return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health);
+        }
+
+        /**
+         * may use {@link Builder#build(SteampunkGame, Map, World)}
+         *
+         * @return this for chaining
+         */
+        public Builder player() {
+            this.pos(15.5f, 15.5f)
+                    .set(TexturePaths.PLAYER)
+                    .health(100);
+            return this;
+        }
     }
 
     @Override
-    protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePaths.BULLET, this.world, this.map, this.body.getPosition(), .5f, .5f, this);
+    protected Projectile<?> makeProjectile() {
+        return new Bullet.Builder().playerBullet(this.getPosition()).build(this.game, this.map, this.world);
     }
 
     /**

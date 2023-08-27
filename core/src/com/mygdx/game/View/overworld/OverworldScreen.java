@@ -43,7 +43,7 @@ public class OverworldScreen implements Screen {
         this.debugRenderer = new Box2DDebugRenderer();
 
         this.map = new Map(this.game, this.world, TiledMapPath.TESTMAP);
-        this.player = new Player(game, TexturePaths.PLAYER, this.world, this.map, 15.5f, 15.5f);
+        this.player = new Player.Builder().player().build(game, this.map, this.world, TexturePaths.PLAYER);
         this.map.setPlayer(this.player);
 
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(this.map.getTiledMap(), 1/PPT, this.batch);
@@ -64,9 +64,9 @@ public class OverworldScreen implements Screen {
         MapBodyBuilder.buildShapes(this.map.getTiledMap(), PPT, this.world);
         this.tiledMapRenderer.setView(this.camera);
 
-        NPC testNPC = new NPC(this.game, TexturePaths.TEST_NPC, this.world, this.map, 8f, 8f, ConversationPaths.TEST);
+        NPC testNPC = new NPC.Builder().pos(8f, 8f).set(ConversationPaths.TEST).set(TexturePaths.TEST_NPC).build(this.game, this.map, this.world);
         this.map.addNPC(testNPC);
-        Enemy testEnemy = new TestEnemy(this.game, TexturePaths.TEST_ENEMY, this.world, this.map, 15.5f, 10f, this.player);
+        TestEnemy testEnemy = new TestEnemy.Builder().set(TexturePaths.TEST_ENEMY).health(100).set(this.player).pos(15.5f, 10f).build(this.game, this.map, this.world);
         this.map.addEnemy(testEnemy);
     }
 

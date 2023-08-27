@@ -12,14 +12,50 @@ import com.mygdx.game.enums.TexturePaths;
 /**
  * represents a npc in the overworld
  */
-public class NPC extends Character {
-    private final ConversationPaths conversationPaths;
+public class NPC extends Character<NPC> {
+    private final ConversationPaths conversationPath;
     private final Body reachBox;
 
-    public NPC(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float x, float y, ConversationPaths conversationPaths) {
-        super(game, texturePaths, world, map, x, y);
-        this.conversationPaths = conversationPaths;
-        this.reachBox = this.createReachBox(x, y);
+    /**
+     * @param game         the game this Movable is in
+     * @param map          the map this Movable is one
+     * @param world        the world this Movables body is in
+     * @param texturePaths the path to this characters texture
+     * @param posX         the x position in tiles
+     * @param posY         the y position in tiles
+     * @param width        the width in tiles
+     * @param height       the height in tiles
+     * @param moveSpeed    the movement speed in tiles/second
+     * @param health       the health of this
+     */
+    public NPC(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, ConversationPaths conversationPath) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+        this.conversationPath = conversationPath;
+        this.reachBox = this.createReachBox(posX, posY);
+    }
+
+    public static class Builder extends Movable.Builder<NPC, Builder> {
+
+        private ConversationPaths conversationPath;
+
+        /**
+         * when using this method the texturePath must be already set
+         * with {@link #set(TexturePaths)} or a template
+         *
+         * @param game  the game
+         * @param map   the map
+         * @param world the world
+         * @return the final product
+         */
+        @Override
+        public NPC build(SteampunkGame game, Map map, World world) {
+            return new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.conversationPath);
+        }
+
+        public Builder set(ConversationPaths conversationPath) {
+            this.conversationPath = conversationPath;
+            return this;
+        }
     }
 
     /**
@@ -38,7 +74,7 @@ public class NPC extends Character {
     }
 
     public ConversationPaths getConversationPath() {
-        return this.conversationPaths;
+        return this.conversationPath;
     }
 
     /**
@@ -47,7 +83,7 @@ public class NPC extends Character {
      * @return the reach box for this character
      */
     Body createReachBox(float posX, float posY) {
-        Body b = this.createBox(posX, posY, this.width * 1.5f, this.height * 1.5f, BodyDef.BodyType.KinematicBody, true);
+        Body b = this.createBox(posX, posY, this.width + .5f, this.height + .5f, BodyDef.BodyType.KinematicBody, true);
         Filter filter = b.getFixtureList().get(0).getFilterData();
         filter.categoryBits = BitFilters.INTERACT_SENSOR;
         filter.maskBits = BitFilters.PLAYER;
@@ -56,7 +92,7 @@ public class NPC extends Character {
     }
 
     @Override
-    protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePaths.BULLET, this.world, this.map, this.getPosition(), .5f, .5f, this);
+    protected Projectile<?> makeProjectile() {
+        return new Bullet.Builder().playerBullet(this.getPosition()).build(this.game, this.map, this.world);
     }
 }

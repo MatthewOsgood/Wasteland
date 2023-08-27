@@ -11,7 +11,7 @@ import com.mygdx.game.Model.ai.SteeringUtils;
 import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.TexturePaths;
 
-public abstract class Movable implements Entity, Location<Vector2> {
+public abstract class Movable<T extends Movable<T>> implements Entity, Location<Vector2> {
 
     protected final SteampunkGame game;
     protected final TextureRegion texture;
@@ -39,17 +39,18 @@ public abstract class Movable implements Entity, Location<Vector2> {
 
 
     /**
-     * @param game        the game this Movable is in
+     * @param game         the game this Movable is in
+     * @param map          the map this Movable is one
+     * @param world        the world this Movables body is in
      * @param texturePaths the path to this characters texture
-     * @param world       the world this Movables body is in
-     * @param map         the map this Movable is one
-     * @param posY        the y position in tiles
-     * @param posX        the x position in tiles
-     * @param width       the width in tiles
-     * @param height      the height in tiles
-     * @param moveSpeed   the movement speed in tiles/second
+     * @param posX         the x position in tiles
+     * @param posY         the y position in tiles
+     * @param width        the width in tiles
+     * @param height       the height in tiles
+     * @param moveSpeed    the movement speed in tiles/second
+     * @param health       the health of this
      */
-    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posY, float posX, float width, float height, float moveSpeed, int health) {
+    public Movable(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
         this.game = game;
         this.map = map;
         this.texture = new TextureRegion(game.assetManager.get(texturePaths.getPath(), Texture.class));
@@ -62,13 +63,103 @@ public abstract class Movable implements Entity, Location<Vector2> {
         this.tmpVelocity = new Vector2();
     }
 
-    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, float width, float height) {
-        this(game, texturePaths, world, map, posY, posX, width, height, 3, 100);
+    public static abstract class Builder<U extends Movable<U>, V extends Movable.Builder<U, V>> {
+
+        protected TexturePaths texturePath;
+        protected float posX = 0f, posY = 0f;
+        protected float width = .75f, height = .75f;
+        protected float moveSpeed = 3f;
+        protected int health = 1;
+
+        /**
+         * when using this method the texturePath must be already set
+         * with {@link #set(TexturePaths)} or a template
+         *
+         * @param game  the game
+         * @param map   the map
+         * @param world the world
+         * @return the final product
+         */
+        public abstract U build(SteampunkGame game, Map map, World world);
+
+        public U build(SteampunkGame game, Map map, World world, TexturePaths texturePath) {
+            this.texturePath = texturePath;
+            return this.build(game, map, world);
+        }
+
+        /**
+         * typecasting required for this to be extended properly
+         *
+         * @return this cast to type V
+         */
+        @SuppressWarnings("unchecked")
+        protected V self() {
+            return (V) this;
+        }
+
+        /**
+         * default is (0, 0)
+         *
+         * @param x x position in meter
+         * @param y y position in meters
+         * @return this for chaining
+         */
+        public V pos(float x, float y) {
+            this.posX = x;
+            this.posY = y;
+            return this.self();
+        }
+
+        /**
+         * default in .75 x .75
+         *
+         * @param width the width in meters
+         * @param height the height in meters
+         * @return this for chaining
+         */
+        public V size(float width, float height) {
+            this.width = width;
+            this.height = height;
+            return this.self();
+        }
+
+        /**
+         * default is 3 m/s
+         *
+         * @param moveSpeed the move speed in m/s
+         * @return this for chaining
+         */
+        public V moveSpeed(float moveSpeed) {
+            this.moveSpeed = moveSpeed;
+            return this.self();
+        }
+
+        /**
+         * default is 1
+         *
+         * @param health max health
+         * @return this for chaining
+         */
+        public V health(int health) {
+            this.health = health;
+            return this.self();
+        }
+
+        /**
+         * for using {@link #build(SteampunkGame, Map, World)}
+         * or with a predefined template
+         *
+         * @param texturePath the {@link TexturePaths}
+         * @return this for chaining
+         */
+        public V set(TexturePaths texturePath) {
+            this.texturePath = texturePath;
+            return this.self();
+        }
+
     }
 
-    public Movable(SteampunkGame game, TexturePaths texturePaths, World world, float posX, float posY, Map map) {
-        this(game, texturePaths, world, map, posX, posY, .75f, .75f);
-    }
+
 
     @Override
     public void setVelocity(float x, float y) {

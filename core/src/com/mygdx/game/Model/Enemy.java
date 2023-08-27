@@ -17,7 +17,7 @@ import com.mygdx.game.SteampunkGame;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.TexturePaths;
 
-public abstract class Enemy extends Character implements Steerable<Vector2> {
+public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements Steerable<Vector2> {
 
     private PrioritySteering<Vector2> steeringBehavior;
     private final SteeringAcceleration<Vector2> steeringOutput;
@@ -29,17 +29,20 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     private float maxAngularSpeed;
 
     /**
-     * @param game        the game this character is in
+     * @param game         the game this Movable is in
+     * @param map          the map this Movable is one
+     * @param world        the world this Movables body is in
      * @param texturePaths the path to this characters texture
-     * @param world       the world this characters body is in
-     * @param map         the map this character is on
-     * @param posX        the x position in tiles
-     * @param posY        the y position in tiles
+     * @param posX         the x position in tiles
+     * @param posY         the y position in tiles
+     * @param width        the width in tiles
+     * @param height       the height in tiles
+     * @param moveSpeed    the movement speed in tiles/second
+     * @param health       the health of this
+     * @param target       the thing this enemy will target
      */
-
-    public Enemy(SteampunkGame game, TexturePaths texturePaths, World world, Map map, float posX, float posY, Movable target) {
-        super(game, texturePaths, world, map, posX, posY);
-        this.moveSpeed = 4f;
+    public Enemy(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Movable<? extends Movable<?>> target) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .01f;
@@ -54,6 +57,21 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
 //        CentralRayWithWhiskersConfiguration<Vector2> raycastConfig = new CentralRayWithWhiskersConfiguration<Vector2>(this, 1f, .5f, MathUtils.PI * .25f);
 //        this.steeringBehavior.add(new RaycastObstacleAvoidance<Vector2>(this, raycastConfig, new RaycastCollision(world)));
 //        this.steeringBehavior.add(new Seek<Vector2>(this, target));
+    }
+
+    public static abstract class Builder<U extends Enemy<U>, V extends Builder<U, V>> extends Movable.Builder<U, V> {
+        protected Movable<? extends Movable<?>> target;
+
+        /**
+         * must be set
+         *
+         * @param target the thing this enemy will target
+         * @return this for chaining
+         */
+        public V set(Movable<? extends Movable<?>> target) {
+            this.target = target;
+            return this.self();
+        }
     }
 
     /**
@@ -74,11 +92,6 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
     }
 
     @Override
-    protected Projectile makeProjectile() {
-        return new Bullet(this.game, TexturePaths.BULLET, this.world, this.map, this.getPosition(), .5f, .5f, this);
-    }
-
-    @Override
     public void update() {
         if (this.steeringBehavior != null) {
             this.steeringBehavior.calculateSteering(this.steeringOutput);
@@ -96,18 +109,6 @@ public abstract class Enemy extends Character implements Steerable<Vector2> {
 
         this.body.applyLinearImpulse(this.steeringOutput.linear, this.getPosition(), false);
         this.body.setLinearVelocity(this.getLinearVelocity().limit(this.moveSpeed));
-
-//        if (this.steeringOutput.linear.x > 0) {
-//            this.velocity.x = 1;
-//        } else if (this.steeringOutput.linear.x < 0) {
-//            this.velocity.x = -1;
-//        }
-//        if (this.steeringOutput.linear.y > 0) {
-//            this.velocity.y = 1;
-//        } else if (this.steeringOutput.linear.y < 0) {
-//            this.velocity.y = -1;
-//        }
-//        this.setVelocity(this.velocity.nor());
     }
     /**
      * Returns the vector indicating the linear velocity of this Steerable.
