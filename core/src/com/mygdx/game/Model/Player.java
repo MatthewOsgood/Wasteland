@@ -18,22 +18,23 @@ public class Player extends Character<Player> {
     private NPC interactTarget;
 
     /**
-     * @param game         the game this Movable is in
-     * @param map          the map this Movable is one
-     * @param world        the world this Movables body is in
-     * @param texturePaths the path to this characters texture
-     * @param posX         the x position in tiles
-     * @param posY         the y position in tiles
-     * @param width        the width in tiles
-     * @param height       the height in tiles
-     * @param moveSpeed    the movement speed in tiles/second
-     * @param health       the health of this
+     * @param game           the game this Movable is in
+     * @param map            the map this Movable is one
+     * @param world          the world this Movables body is in
+     * @param texturePaths   the path to this characters texture
+     * @param posX           the x position in tiles
+     * @param posY           the y position in tiles
+     * @param width          the width in tiles
+     * @param height         the height in tiles
+     * @param moveSpeed      the movement speed in tiles/second
+     * @param health         the health of this
+     * @param attackCooldown the time between attacks
      */
-    public Player(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    public Player(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
     }
 
-    public static class Builder extends Movable.Builder<Player, Builder> {
+    public static class Builder extends Character.Builder<Player, Builder> {
 
         /**
          * when using this method the texturePath must be already set
@@ -46,7 +47,7 @@ public class Player extends Character<Player> {
          */
         @Override
         public Player build(SteampunkGame game, Map map, World world) {
-            return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health);
+            return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown);
         }
 
         /**
@@ -57,7 +58,8 @@ public class Player extends Character<Player> {
         public Builder player() {
             this.pos(15.5f, 15.5f)
                     .set(TexturePaths.PLAYER)
-                    .health(100);
+                    .health(100)
+                    .attackCooldown(.5f);
             return this;
         }
     }
@@ -93,7 +95,5 @@ public class Player extends Character<Player> {
         b.getFixtureList().get(0).setFilterData(filter);
         return b;
     }
-
-
 
 }

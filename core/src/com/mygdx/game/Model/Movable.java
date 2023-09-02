@@ -30,12 +30,12 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
      * movement speed in tiles/second
      */
     protected float moveSpeed;
+    protected int health;
     /**
      * the angle of this Movable
      */
     protected float angle;
     private final Vector2 tmpVelocity;
-    private int health;
 
 
     /**
@@ -60,6 +60,24 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
         this.moveSpeed = moveSpeed;
         this.health = health;
         this.body = this.createBody(posX, posY);
+        this.tmpVelocity = new Vector2();
+    }
+
+    /**
+     * for making a copy
+     *
+     * @param movable the movable that will be copied
+     */
+    public Movable(Movable<?> movable) {
+        this.game = movable.game;
+        this.map = movable.map;
+        this.texture = movable.texture;
+        this.world = movable.world;
+        this.width = movable.width;
+        this.height = movable.height;
+        this.moveSpeed = movable.moveSpeed;
+        this.health = movable.health;
+        this.body = this.createBody(movable.getPosition().x, movable.getPosition().y);
         this.tmpVelocity = new Vector2();
     }
 

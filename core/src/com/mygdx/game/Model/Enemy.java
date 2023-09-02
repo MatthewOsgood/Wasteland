@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -27,6 +28,8 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
     private float maxLinearAcceleration;
     private float maxAngularAcceleration;
     private float maxAngularSpeed;
+    private final Movable<?> target;
+
 
     /**
      * @param game         the game this Movable is in
@@ -41,14 +44,15 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
      * @param health       the health of this
      * @param target       the thing this enemy will target
      */
-    public Enemy(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Movable<? extends Movable<?>> target) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    public Enemy(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, Movable<? extends Movable<?>> target) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .01f;
         this.maxLinearAcceleration = .1f;
         this.maxAngularAcceleration = 0f;
         this.maxAngularSpeed = 0f;
+        this.target = target;
 
         this.path = new LinePath<Vector2>(map.getWaypoints(this, target));
         FollowPath<Vector2, LinePath.LinePathParam> followPath = new FollowPath<Vector2, LinePath.LinePathParam>(this, this.path, 1);
@@ -59,7 +63,7 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
 //        this.steeringBehavior.add(new Seek<Vector2>(this, target));
     }
 
-    public static abstract class Builder<U extends Enemy<U>, V extends Builder<U, V>> extends Movable.Builder<U, V> {
+    public static abstract class Builder<U extends Enemy<U>, V extends Builder<U, V>> extends Character.Builder<U, V> {
         protected Movable<? extends Movable<?>> target;
 
         /**
@@ -93,9 +97,11 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
 
     @Override
     public void update() {
-        if (this.steeringBehavior != null) {
-            this.steeringBehavior.calculateSteering(this.steeringOutput);
-            this.applySteering();
+        super.update();
+        this.steeringBehavior.calculateSteering(this.steeringOutput);
+        this.applySteering();
+        if (this.getPosition().sub(this.target.getPosition()).len() <= 3) {
+            this.shoot(new Vector3(this.target.getPosition(), 0));
         }
     }
 

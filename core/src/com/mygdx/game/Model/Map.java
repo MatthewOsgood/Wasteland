@@ -113,6 +113,7 @@ public class Map {
             }
         }
         this.toDestroy.clear();
+        this.player.update();
         for (Enemy<?> enemy : this.enemies) {
             enemy.setPath(this.getWaypoints(enemy, this.player));
             enemy.update();
