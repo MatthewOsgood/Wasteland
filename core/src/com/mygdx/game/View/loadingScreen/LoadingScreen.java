@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.View.mainMenu.MainMenuScreen;
 import com.mygdx.game.enums.SkinPaths;
 import com.mygdx.game.enums.TexturePaths;
@@ -21,13 +21,13 @@ import com.mygdx.game.enums.TiledMapPath;
 
 public class LoadingScreen implements Screen {
 
-    private final SteampunkGame game;
+    private final Wasteland game;
     private final Stage stage;
     private final Skin skin;
     private float progress;
     private ProgressBar progressBar;
 
-    public LoadingScreen(final SteampunkGame game) {
+    public LoadingScreen(final Wasteland game) {
         this.game = game;
         ScreenViewport viewport = new ScreenViewport(game.camera);
         this.stage = new Stage(viewport, game.batch);

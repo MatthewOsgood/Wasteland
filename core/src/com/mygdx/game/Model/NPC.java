@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
@@ -28,7 +28,7 @@ public class NPC extends Character<NPC> {
      * @param moveSpeed    the movement speed in tiles/second
      * @param health       the health of this
      */
-    public NPC(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, ConversationPaths conversationPath) {
+    public NPC(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, ConversationPaths conversationPath) {
         super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
         this.conversationPath = conversationPath;
         this.reachBox = this.createReachBox(posX, posY);
@@ -48,7 +48,7 @@ public class NPC extends Character<NPC> {
          * @return the final product
          */
         @Override
-        public NPC build(SteampunkGame game, Map map, World world) {
+        public NPC build(Wasteland game, Map map, World world) {
             return new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown, this.conversationPath);
         }
 

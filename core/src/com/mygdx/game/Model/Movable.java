@@ -8,12 +8,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.Model.ai.SteeringUtils;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
 
 public abstract class Movable<T extends Movable<T>> implements Entity, Location<Vector2> {
 
-    protected final SteampunkGame game;
+    protected final Wasteland game;
     protected final TextureRegion texture;
     protected final Body body;
     protected final World world;
@@ -50,7 +50,7 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
      * @param moveSpeed    the movement speed in tiles/second
      * @param health       the health of this
      */
-    public Movable(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
+    public Movable(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
         this.game = game;
         this.map = map;
         this.texture = new TextureRegion(game.assetManager.get(texturePaths.getPath(), Texture.class));
@@ -77,6 +77,7 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
         this.height = movable.height;
         this.moveSpeed = movable.moveSpeed;
         this.health = movable.health;
+        this.angle = movable.angle;
         this.body = this.createBody(movable.getPosition().x, movable.getPosition().y);
         this.tmpVelocity = new Vector2();
     }
@@ -98,9 +99,9 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
          * @param world the world
          * @return the final product
          */
-        public abstract U build(SteampunkGame game, Map map, World world);
+        public abstract U build(Wasteland game, Map map, World world);
 
-        public U build(SteampunkGame game, Map map, World world, TexturePaths texturePath) {
+        public U build(Wasteland game, Map map, World world, TexturePaths texturePath) {
             this.texturePath = texturePath;
             return this.build(game, map, world);
         }
@@ -164,7 +165,7 @@ public abstract class Movable<T extends Movable<T>> implements Entity, Location<
         }
 
         /**
-         * for using {@link #build(SteampunkGame, Map, World)}
+         * for using {@link #build(Wasteland, Map, World)}
          * or with a predefined template
          *
          * @param texturePath the {@link TexturePaths}

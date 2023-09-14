@@ -12,11 +12,11 @@ import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
 import com.mygdx.game.Model.ai.pfa.MapGraph;
 import com.mygdx.game.Model.ai.pfa.MapNode;
 import com.mygdx.game.Model.ai.pfa.SmoothablePath;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TiledMapPath;
 
 public class Map {
-    private final SteampunkGame game;
+    private final Wasteland game;
     private final World world;
     private final TiledMap tiledMap;
     private Player player;
@@ -27,7 +27,7 @@ public class Map {
     private final MapGraph graph;
     private final PathSmoother<MapNode, Vector2> pathSmoother;
 
-    public Map(final SteampunkGame game, World world, TiledMapPath path) {
+    public Map(final Wasteland game, World world, TiledMapPath path) {
         this.game = game;
         this.world = world;
         this.tiledMap = game.assetManager.get(path.getPath());

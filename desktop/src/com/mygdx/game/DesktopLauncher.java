@@ -14,6 +14,6 @@ public class DesktopLauncher {
 		Graphics.DisplayMode desktopMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
 		config.setForegroundFPS(desktopMode.refreshRate);
 		config.setMaximized(true);
-		new Lwjgl3Application(new SteampunkGame().setRefreshRate(desktopMode.refreshRate), config);
+		new Lwjgl3Application(new Wasteland().setRefreshRate(desktopMode.refreshRate), config);
 	}
 }

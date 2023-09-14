@@ -9,15 +9,15 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.mygdx.game.View.loadingScreen.LoadingScreen;
 
-public class SteampunkGame extends Game {
+public class Wasteland extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public AssetManager assetManager;
 	public OrthographicCamera camera;
 	private LoadingScreen loadingScreen;
 
-	public static final float VIEW_WIDTH = 64;
-	public static final float VIEW_HEIGHT = 36;
+	public static final float VIEW_WIDTH = 48;
+	public static final float VIEW_HEIGHT = 27;
 	public static final float PPT = 16;
 	public float REFRESH_RATE;
 
@@ -33,7 +33,7 @@ public class SteampunkGame extends Game {
 		this.setScreen(this.loadingScreen);
 	}
 
-	public SteampunkGame setRefreshRate(float refreshRate) {
+	public Wasteland setRefreshRate(float refreshRate) {
 		this.REFRESH_RATE = refreshRate;
 		return this;
 	}

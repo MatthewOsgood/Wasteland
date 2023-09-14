@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.SkinPaths;
 import com.mygdx.game.enums.TexturePaths;
@@ -22,7 +22,7 @@ import com.mygdx.game.enums.TexturePaths;
 import java.util.Iterator;
 
 public class DialogueOverlay {
-    private final SteampunkGame game;
+    private final Wasteland game;
     public final Stage stage;
     private final OrthographicCamera camera;
 
@@ -40,9 +40,9 @@ public class DialogueOverlay {
     private boolean isVisible;
     private final BitmapFont font;
 
-    public DialogueOverlay(SteampunkGame game) {
+    public DialogueOverlay(Wasteland game) {
         this.game = game;
-        this.camera = new OrthographicCamera(SteampunkGame.VIEW_WIDTH, SteampunkGame.VIEW_HEIGHT);
+        this.camera = new OrthographicCamera(Wasteland.VIEW_WIDTH, Wasteland.VIEW_HEIGHT);
         ScreenViewport viewport = new ScreenViewport(this.camera);
         this.stage = new Stage(viewport, game.batch);
         this.table = new Table();

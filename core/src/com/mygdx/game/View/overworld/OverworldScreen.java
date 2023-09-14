@@ -13,18 +13,18 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Model.*;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.View.dialogue.DialogueOverlay;
 import com.mygdx.game.contactListeners.OverworldContactListener;
 import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
 import com.mygdx.game.enums.TiledMapPath;
 
-import static com.mygdx.game.SteampunkGame.*;
+import static com.mygdx.game.Wasteland.*;
 
 public class OverworldScreen implements Screen {
 
-    private final SteampunkGame game;
+    private final Wasteland game;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
     private final World world;
@@ -34,7 +34,7 @@ public class OverworldScreen implements Screen {
     private final Player player;
     public final DialogueOverlay dialogueOverlay;
 
-    public OverworldScreen(SteampunkGame game) {
+    public OverworldScreen(Wasteland game) {
         this.game = game;
         this.batch = game.batch;
         Box2D.init();

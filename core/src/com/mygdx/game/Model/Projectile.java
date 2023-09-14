@@ -2,7 +2,7 @@ package com.mygdx.game.Model;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
 
 public abstract class Projectile<T extends Projectile<T>> extends Movable<T> {
@@ -22,7 +22,7 @@ public abstract class Projectile<T extends Projectile<T>> extends Movable<T> {
      * @param health       the health of this
      * @param damage       the amount of damage this projectile deals
      */
-    public Projectile(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, int damage) {
+    public Projectile(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, int damage) {
         super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
         this.damage = damage;
     }

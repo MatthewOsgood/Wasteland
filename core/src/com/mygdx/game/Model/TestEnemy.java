@@ -1,7 +1,8 @@
 package com.mygdx.game.Model;
 
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Model.ai.EnemyBullet;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
 
 public class TestEnemy extends Enemy<TestEnemy> {
@@ -22,13 +23,13 @@ public class TestEnemy extends Enemy<TestEnemy> {
      *
      * @param target         the thing this enemy will target
      */
-    public TestEnemy(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, Movable<? extends Movable<?>> target) {
+    public TestEnemy(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, Movable<? extends Movable<?>> target) {
         super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown, target);
     }
 
     @Override
     protected Projectile<?> makeProjectile() {
-        return new Bullet.Builder().playerBullet(this.getPosition()).build(this.game, this.map, this.world);
+        return new EnemyBullet.Builder().enemyBullet(this.getPosition()).build(this.game, this.map, this.world);
     }
 
     public static class Builder extends Enemy.Builder<TestEnemy, Builder> {
@@ -43,7 +44,7 @@ public class TestEnemy extends Enemy<TestEnemy> {
          * @return the final product
          */
         @Override
-        public TestEnemy build(SteampunkGame game, Map map, World world) {
+        public TestEnemy build(Wasteland game, Map map, World world) {
             return new TestEnemy(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown, this.target);
         }
     }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
@@ -30,7 +30,7 @@ public class Player extends Character<Player> {
      * @param health         the health of this
      * @param attackCooldown the time between attacks
      */
-    public Player(SteampunkGame game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown) {
+    public Player(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown) {
         super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
     }
 
@@ -46,12 +46,12 @@ public class Player extends Character<Player> {
          * @return the final product
          */
         @Override
-        public Player build(SteampunkGame game, Map map, World world) {
+        public Player build(Wasteland game, Map map, World world) {
             return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown);
         }
 
         /**
-         * may use {@link Builder#build(SteampunkGame, Map, World)}
+         * may use {@link Builder#build(Wasteland, Map, World)}
          *
          * @return this for chaining
          */
@@ -59,7 +59,8 @@ public class Player extends Character<Player> {
             this.pos(15.5f, 15.5f)
                     .set(TexturePaths.PLAYER)
                     .health(100)
-                    .attackCooldown(.5f);
+                    .attackCooldown(.5f)
+                    .size(1.75f, 1.75f);
             return this;
         }
     }
@@ -88,7 +89,7 @@ public class Player extends Character<Player> {
      */
     @Override
     protected Body createBody(float posX, float posY) {
-        Body b = this.createBox(posX, posY, this.width, this.height, BodyDef.BodyType.DynamicBody, false);
+        Body b = this.createBox(posX, posY, this.width * (.6f), this.height, BodyDef.BodyType.DynamicBody, false);
         Filter filter = b.getFixtureList().get(0).getFilterData();
         filter.categoryBits = BitFilters.PLAYER;
         filter.maskBits = BitFilters.ENEMY | BitFilters.OBSTACLE | BitFilters.ENEMY_PROJECTILE | BitFilters.INTERACT_SENSOR;

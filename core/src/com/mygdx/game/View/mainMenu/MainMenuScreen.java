@@ -11,17 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.View.mainMenu.eventListener.NewGameClickListener;
 import com.mygdx.game.enums.SkinPaths;
 
 public class MainMenuScreen implements Screen {
 
-    private final SteampunkGame game;
+    private final Wasteland game;
     private final Stage stage;
     private final Skin skin;
 
-    public MainMenuScreen(SteampunkGame game) {
+    public MainMenuScreen(Wasteland game) {
         this.game = game;
         this.skin = game.assetManager.get(SkinPaths.TEST.getPath());
         ScreenViewport viewport = new ScreenViewport(game.camera);
@@ -50,7 +50,7 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * Called when this screen becomes the current screen for a {@link com.mygdx.game.SteampunkGame}.
+     * Called when this screen becomes the current screen for a {@link Wasteland}.
      */
     @Override
     public void show() {

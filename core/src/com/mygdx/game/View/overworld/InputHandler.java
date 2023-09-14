@@ -6,19 +6,19 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Model.Player;
-import com.mygdx.game.SteampunkGame;
+import com.mygdx.game.Wasteland;
 
 /**
  * handles all non-movement input while on the {@link OverworldScreen}
  */
 public class InputHandler implements InputProcessor {
 
-    private final SteampunkGame game;
+    private final Wasteland game;
     private final OverworldScreen overworldScreen;
     private final Player player;
     private final Map map;
 
-    public InputHandler(SteampunkGame game, OverworldScreen overworldScreen, Player player, Map map) {
+    public InputHandler(Wasteland game, OverworldScreen overworldScreen, Player player, Map map) {
         this.game = game;
         this.overworldScreen = overworldScreen;
         this.player = player;

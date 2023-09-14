@@ -1,7 +1,7 @@
 package com.mygdx.game.enums;
 
 public enum TexturePaths {
-    PLAYER("player.png"),
+    PLAYER("scorpion.png"),
     TEST_NPC("testNPC.png"),
     LOGO("logo.png"),
     BULLET("bullet.png"),
