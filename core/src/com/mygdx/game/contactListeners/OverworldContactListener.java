@@ -33,7 +33,6 @@ public class OverworldContactListener implements ContactListener {
         }
         if (b.isSensor() && b.getUserData() instanceof NPC && a.getUserData() instanceof Player) {
             ((Player) a.getUserData()).setInteract((NPC) b.getUserData());
-            return;
         }
     }
 
@@ -44,10 +43,8 @@ public class OverworldContactListener implements ContactListener {
 
         if (a.isSensor() && a.getUserData() instanceof NPC && b.getUserData() instanceof Player) {
             ((Player) b.getUserData()).canInteract = false;
-            return;
         } else if (b.isSensor() && b.getUserData() instanceof NPC && a.getUserData() instanceof Player) {
             ((Player) a.getUserData()).canInteract = false;
-            return;
         }
     }
 

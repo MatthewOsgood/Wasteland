@@ -31,7 +31,7 @@ public class Map {
         this.game = game;
         this.world = world;
         this.tiledMap = game.assetManager.get(path.getPath());
-        this.npcs = new Array<NPC>();
+        this.npcs = new Array<>();
         this.enemies = new Array<Enemy<?>>();
         this.projectiles = new Array<Projectile<?>>();
         this.toDestroy = new Array<Movable<?>>();
@@ -51,7 +51,6 @@ public class Map {
      * @param batch the {@link SpriteBatch} this map will be drawn on
      */
     public void draw(SpriteBatch batch) {
-        batch.begin();
         this.player.draw(batch);
         for (NPC npc : this.npcs) {
             npc.draw(batch);
@@ -62,7 +61,6 @@ public class Map {
         for (Projectile<?> p : this.projectiles) {
             p.draw(batch);
         }
-        batch.end();
 //        this.shapeRenderer.setProjectionMatrix(this.game.camera.combined);
 //        this.shapeRenderer.setAutoShapeType(true);
 //        this.shapeRenderer.begin();

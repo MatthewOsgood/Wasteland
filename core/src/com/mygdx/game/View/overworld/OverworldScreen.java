@@ -33,6 +33,10 @@ public class OverworldScreen implements Screen {
     private final Map map;
     private final Player player;
     public final DialogueOverlay dialogueOverlay;
+    /**
+     * shared vector3 to prevent garbage collection
+     */
+    private final Vector3 tmp;
 
     public OverworldScreen(Wasteland game) {
         this.game = game;
@@ -52,6 +56,8 @@ public class OverworldScreen implements Screen {
 
         this.dialogueOverlay = new DialogueOverlay(game);
         Gdx.input.setInputProcessor(new InputHandler(game, this, this.player, this.map));
+
+        this.tmp = new Vector3();
     }
 
     /**
@@ -84,9 +90,9 @@ public class OverworldScreen implements Screen {
         this.tiledMapRenderer.setView(this.game.camera);
         this.batch.setProjectionMatrix(this.camera.combined);
         this.tiledMapRenderer.render();
-//        this.batch.begin();
+        this.batch.begin();
         this.map.draw(this.batch);
-//        this.batch.end();
+        this.batch.end();
         this.debugRenderer.render(this.world, this.camera.combined);
         this.dialogueOverlay.draw();
     }
@@ -142,7 +148,11 @@ public class OverworldScreen implements Screen {
      */
     private void move(Vector2 velocity) {
         this.player.setVelocity(velocity);
-        this.centerCamera();
+
+        this.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        this.camera.unproject(this.tmp);
+        Vector3 cameraPos = new Vector3(this.player.getPosition(), 0).lerp(this.tmp, .3f);
+        this.camera.position.lerp(cameraPos, .2f);
     }
 
     /**
