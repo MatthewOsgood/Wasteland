@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Model.Map;
-import com.mygdx.game.Model.Projectile;
+import com.mygdx.game.Model.Entities.Projectile;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.TexturePaths;

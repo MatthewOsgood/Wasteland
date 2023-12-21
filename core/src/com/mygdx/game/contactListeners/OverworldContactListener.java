@@ -1,10 +1,10 @@
 package com.mygdx.game.contactListeners;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.game.Model.Movable;
-import com.mygdx.game.Model.NPC;
-import com.mygdx.game.Model.Player;
-import com.mygdx.game.Model.Projectile;
+import com.mygdx.game.Model.Entities.Movable;
+import com.mygdx.game.Model.Entities.NPC;
+import com.mygdx.game.Model.Entities.Player.Player;
+import com.mygdx.game.Model.Entities.Projectile;
 
 public class OverworldContactListener implements ContactListener {
 

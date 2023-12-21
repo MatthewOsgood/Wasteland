@@ -1,4 +1,4 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;

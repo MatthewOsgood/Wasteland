@@ -1,9 +1,12 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities.Player;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Entities.Character;
+import com.mygdx.game.Model.Entities.NPC;
+import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.ConversationPaths;
@@ -31,7 +34,7 @@ public class Player extends Character<Player> {
      * @param attackCooldown the time between attacks
      */
     public Player(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
     }
 
     public static class Builder extends Character.Builder<Player, Builder> {
@@ -59,15 +62,10 @@ public class Player extends Character<Player> {
             this.pos(15.5f, 15.5f)
                     .set(TexturePaths.PLAYER)
                     .health(100)
-                    .attackCooldown(.5f)
+                    .weapon(.5f)
                     .size(1.75f, 1.75f);
             return this;
         }
-    }
-
-    @Override
-    protected Projectile<?> makeProjectile() {
-        return new Bullet.Builder().playerBullet(this.getPosition()).build(this.game, this.map, this.world);
     }
 
     /**

@@ -1,7 +1,8 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
 

@@ -1,10 +1,11 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.TexturePaths;

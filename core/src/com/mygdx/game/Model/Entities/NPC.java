@@ -1,9 +1,10 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
 import com.mygdx.game.enums.ConversationPaths;
@@ -29,7 +30,7 @@ public class NPC extends Character<NPC> {
      * @param health       the health of this
      */
     public NPC(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, ConversationPaths conversationPath) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, attackCooldown);
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
         this.conversationPath = conversationPath;
         this.reachBox = this.createReachBox(posX, posY);
     }
@@ -91,8 +92,4 @@ public class NPC extends Character<NPC> {
         return b;
     }
 
-    @Override
-    protected Projectile<?> makeProjectile() {
-        return new Bullet.Builder().playerBullet(this.getPosition()).build(this.game, this.map, this.world);
-    }
 }

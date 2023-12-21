@@ -1,4 +1,4 @@
-package com.mygdx.game.Model;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.game.Model.Map;
+import com.mygdx.game.Model.MapLocation;
 import com.mygdx.game.Model.ai.SteeringUtils;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
