@@ -1,6 +1,5 @@
 package com.mygdx.game.Model.Entities;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -48,15 +47,13 @@ public class Bullet extends Projectile<Bullet> {
         /**
          * may use {@link Builder#build(Wasteland, Map, World)}
          *
-         * @param pos the position of this bullet (usually the characters position)
          * @return this for chaining
          */
-        public Builder playerBullet(Vector2 pos) {
+        public Builder playerBullet() {
             this.set(TexturePaths.BULLET)
                     .damage(25)
                     .moveSpeed(5)
-                    .size(.5f, .5f)
-                    .pos(pos.x, pos.y);
+                    .size(.5f, .5f);
             return this;
         }
     }

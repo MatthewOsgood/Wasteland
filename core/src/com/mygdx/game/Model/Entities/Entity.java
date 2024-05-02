@@ -15,5 +15,4 @@ public interface Entity extends Disposable {
     void draw(SpriteBatch batch);
     Vector2 getVelocity();
     void setToDestroy();
-
 }

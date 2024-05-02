@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Model.Map;
-import com.mygdx.game.Model.Items.Weapon;
+import com.mygdx.game.Model.Items.Weapons.Weapon;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.TexturePaths;
 
@@ -26,8 +26,9 @@ public abstract class Character<T extends Character<T>> extends Movable<T> {
      * @param moveSpeed    the movement speed in tiles/second
      * @param health       the health of this
      */
-    public Character(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health) {
+    public Character(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Weapon weapon) {
         super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+        this.weapon = weapon;
     }
 
     public static abstract class Builder<U extends Character<U>, V extends Builder<U, V>> extends Movable.Builder<U, V> {
@@ -47,10 +48,11 @@ public abstract class Character<T extends Character<T>> extends Movable<T> {
      */
     public void shoot(Vector3 touchPoint) {
         if (this.weapon.canShoot()) {
-            Projectile<?> p = this.weapon.makeProjectile();
-            p.setVelocity(new Vector2(touchPoint.x, touchPoint.y).sub(this.getPosition()).nor());
+            Vector2 vel = new Vector2(touchPoint.x, touchPoint.y).sub(this.getPosition()).nor();
+            Projectile<?> p = this.weapon.makeProjectile(this.getPosition(), vel, this.game, this.map, this.world);
             p.update();
             this.map.addProjectile(p);
+
         }
     }
 

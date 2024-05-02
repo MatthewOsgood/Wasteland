@@ -1,6 +1,10 @@
-package com.mygdx.game.Model.Items;
+package com.mygdx.game.Model.Items.Weapons;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Model.Entities.Projectile;
+import com.mygdx.game.Model.Map;
+import com.mygdx.game.Wasteland;
 
 public interface Weapon {
 
@@ -14,7 +18,7 @@ public interface Weapon {
      *
      * @return a new instance of the projectile this weapon shoots
      */
-    Projectile<?> makeProjectile();
+    Projectile<?> makeProjectile(Vector2 position, Vector2 velocity, Wasteland game, Map map, World world);
 
     /**
      * must be called every frame

@@ -1,11 +1,11 @@
-package com.mygdx.game.Model.Entities.Player;
+package com.mygdx.game.Model.Entities;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.Model.Entities.Character;
-import com.mygdx.game.Model.Entities.NPC;
+import com.mygdx.game.Model.Items.Weapons.StarterGun;
+import com.mygdx.game.Model.Items.Weapons.Weapon;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
@@ -31,10 +31,9 @@ public class Player extends Character<Player> {
      * @param height         the height in tiles
      * @param moveSpeed      the movement speed in tiles/second
      * @param health         the health of this
-     * @param attackCooldown the time between attacks
      */
-    public Player(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    public Player(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Weapon weapon) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, weapon);
     }
 
     public static class Builder extends Character.Builder<Player, Builder> {
@@ -50,7 +49,7 @@ public class Player extends Character<Player> {
          */
         @Override
         public Player build(Wasteland game, Map map, World world) {
-            return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown);
+            return new Player(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon);
         }
 
         /**
@@ -62,7 +61,7 @@ public class Player extends Character<Player> {
             this.pos(15.5f, 15.5f)
                     .set(TexturePaths.PLAYER)
                     .health(100)
-                    .weapon(.5f)
+                    .weapon(new StarterGun(1f))
                     .size(1.75f, 1.75f);
             return this;
         }

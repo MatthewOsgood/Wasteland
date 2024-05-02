@@ -1,6 +1,6 @@
-package com.mygdx.game.Model.Items;
+package com.mygdx.game.Model.Items.Weapons;
 
-public abstract class WeaponImpl implements Weapon {
+public abstract class BasicGun implements Weapon {
 
     /**
      * time in seconds between attacks
@@ -8,9 +8,9 @@ public abstract class WeaponImpl implements Weapon {
     private final float ATTACK_COOLDOWN;
     private float timeSinceLastAttack;
 
-    protected WeaponImpl(float attackCooldown) {
+    protected BasicGun(float attackCooldown) {
         ATTACK_COOLDOWN = attackCooldown;
-        this.timeSinceLastAttack = 0f;
+        this.timeSinceLastAttack = attackCooldown;
     }
 
     /**

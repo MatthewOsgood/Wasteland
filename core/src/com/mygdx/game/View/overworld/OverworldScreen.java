@@ -14,8 +14,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Model.*;
 import com.mygdx.game.Model.Entities.NPC;
-import com.mygdx.game.Model.Entities.Player.Player;
+import com.mygdx.game.Model.Entities.Player;
 import com.mygdx.game.Model.Entities.TestEnemy;
+import com.mygdx.game.Model.Items.Weapons.NullWeapon;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.View.dialogue.DialogueOverlay;
 import com.mygdx.game.contactListeners.OverworldContactListener;
@@ -75,7 +76,7 @@ public class OverworldScreen implements Screen {
 
         NPC testNPC = new NPC.Builder().pos(8f, 8f).set(ConversationPaths.TEST).set(TexturePaths.TEST_NPC).build(this.game, this.map, this.world);
         this.map.addNPC(testNPC);
-        TestEnemy testEnemy = new TestEnemy.Builder().set(TexturePaths.TEST_ENEMY).health(100).set(this.player).pos(15.5f, 10f).build(this.game, this.map, this.world);
+        TestEnemy testEnemy = new TestEnemy.Builder().set(TexturePaths.TEST_ENEMY).health(100).set(this.player).pos(15.5f, 10f).weapon(new NullWeapon()).build(this.game, this.map, this.world);
         this.map.addEnemy(testEnemy);
     }
 

@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Model.Items.Weapons.Weapon;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
@@ -45,8 +46,8 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
      * @param health       the health of this
      * @param target       the thing this enemy will target
      */
-    public Enemy(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, Movable<? extends Movable<?>> target) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    public Enemy(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Weapon weapon, Movable<? extends Movable<?>> target) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, weapon);
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.tagged = false;
         this.zeroLinearSpeedThreshold = .01f;

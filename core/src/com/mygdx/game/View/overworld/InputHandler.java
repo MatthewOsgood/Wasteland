@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Model.Map;
-import com.mygdx.game.Model.Entities.Player.Player;
+import com.mygdx.game.Model.Entities.Player;
 import com.mygdx.game.Wasteland;
 
 /**

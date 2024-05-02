@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Items.Weapons.Weapon;
 import com.mygdx.game.Model.Map;
 import com.mygdx.game.Wasteland;
 import com.mygdx.game.enums.BitFilters;
@@ -29,8 +30,8 @@ public class NPC extends Character<NPC> {
      * @param moveSpeed    the movement speed in tiles/second
      * @param health       the health of this
      */
-    public NPC(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, float attackCooldown, ConversationPaths conversationPath) {
-        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health);
+    public NPC(Wasteland game, Map map, World world, TexturePaths texturePaths, float posX, float posY, float width, float height, float moveSpeed, int health, Weapon weapon, ConversationPaths conversationPath) {
+        super(game, map, world, texturePaths, posX, posY, width, height, moveSpeed, health, weapon);
         this.conversationPath = conversationPath;
         this.reachBox = this.createReachBox(posX, posY);
     }
@@ -50,7 +51,7 @@ public class NPC extends Character<NPC> {
          */
         @Override
         public NPC build(Wasteland game, Map map, World world) {
-            return new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.attackCooldown, this.conversationPath);
+            return new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon, this.conversationPath);
         }
 
         public Builder set(ConversationPaths conversationPath) {

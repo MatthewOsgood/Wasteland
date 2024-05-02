@@ -68,7 +68,7 @@ public class PlayerInventory implements Inventory {
     @Override
     public void removeItem(Items item, int amount) {
         this.addItem(item, -amount);
-        if (this.items.get(item) == 0) {
+        if (this.items.get(item) <= 0) {
             this.items.remove(item);
         }
     }
@@ -79,7 +79,7 @@ public class PlayerInventory implements Inventory {
      * @param items the item that will be removed
      */
     @Override
-    public void removeAll(Items items) {
+    public void removeItem(Items items) {
         this.items.remove(items);
     }
 

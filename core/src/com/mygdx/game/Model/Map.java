@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Model.Entities.*;
-import com.mygdx.game.Model.Entities.Player.Player;
+import com.mygdx.game.Model.Entities.Player;
 import com.mygdx.game.Model.ai.RaycastCollision;
 import com.mygdx.game.Model.ai.pfa.ManhattanHeuristic;
 import com.mygdx.game.Model.ai.pfa.MapGraph;
