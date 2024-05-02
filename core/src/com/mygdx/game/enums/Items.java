@@ -6,9 +6,11 @@ package com.mygdx.game.enums;
 public enum Items {
     ;
     private final String name;
+    private final TexturePaths texturePath;
 
-    Items(String name) {
+    Items(String name, TexturePaths texturePath) {
         this.name = name;
+        this.texturePath = texturePath;
     }
 
     public String Name() {
@@ -16,4 +18,7 @@ public enum Items {
     }
 
 
+    public TexturePaths TexturePath() {
+        return texturePath;
+    }
 }
