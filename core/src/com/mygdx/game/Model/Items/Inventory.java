@@ -37,7 +37,7 @@ public interface Inventory {
      *
      * @param items the item that will be removed
      */
-    void removeAll(Items items);
+    void removeItem(Items items);
 
     /**
      * @return the max number of item stacks that can be in this inventory
