@@ -258,6 +258,11 @@ public abstract class Enemy<T extends Enemy<T>> extends Character<T> implements 
         }
     }
 
+    /**
+     * for debug purposes
+     *
+     * @param shapeRenderer ShapeRenderer to draw the path
+     */
     public void drawPath(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.RED);
         for (LinePath.Segment<Vector2> segment : this.path.getSegments()) {

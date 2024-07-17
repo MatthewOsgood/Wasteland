@@ -19,14 +19,15 @@ public class PlayerInventory implements Inventory {
 
     public PlayerInventory(Map<Items, Integer> items, int maxSize) {
         if (items.size() > maxSize) {
-            throw new IllegalArgumentException("number of items in inventory (" + items.size() + ") is more than maxSize "  + maxSize);
+            throw new IllegalArgumentException(
+                    "number of items in inventory (" + items.size() + ") is more than maxSize "  + maxSize);
         }
         this.items = items;
         this.maxSize = maxSize;
     }
 
     public PlayerInventory(int maxSize) {
-        this(new HashMap<>(maxSize), maxSize);
+        this(new HashMap<Items, Integer>(maxSize), maxSize);
     }
 
 
@@ -92,7 +93,7 @@ public class PlayerInventory implements Inventory {
      * @return the number of that item in this inventory
      */
     @Override
-    public int get(Items item) {
+    public int count(Items item) {
         return this.items.get(item);
     }
 }

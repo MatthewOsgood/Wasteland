@@ -4,6 +4,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Model.Items.Inventory;
+import com.mygdx.game.Model.Items.PlayerInventory;
 import com.mygdx.game.Model.Items.Weapons.StarterGun;
 import com.mygdx.game.Model.Items.Weapons.Weapon;
 import com.mygdx.game.Model.Map;
@@ -19,6 +21,8 @@ public class Player extends Character<Player> {
 
     public boolean canInteract;
     private NPC interactTarget;
+
+    private static final Inventory inventory = new PlayerInventory(16);
 
     /**
      * @param game           the game this Movable is in

@@ -2,6 +2,9 @@ package com.mygdx.game.Model.Items;
 
 import com.mygdx.game.enums.Items;
 
+/**
+ * represents an inventory of any kind
+ */
 public interface Inventory {
 
     /**
@@ -48,6 +51,6 @@ public interface Inventory {
      * @param item the item to get
      * @return the number of that item in this inventory
      */
-    int get(Items item);
+    int count(Items item);
 
 }
