@@ -12,20 +12,8 @@ public class OverworldContactListener implements ContactListener {
     public void beginContact(Contact contact) {
         Fixture a = contact.getFixtureA();
         Fixture b = contact.getFixtureB();
-        if (a.getUserData() instanceof Projectile) {
-            ((Projectile) a.getUserData()).setToDestroy();
-            if (b.getUserData() instanceof Movable) {
-                ((Movable) b.getUserData()).damage(((Projectile) a.getUserData()).getDamage());
-            }
-            return;
-        }
-        if (b.getUserData() instanceof Projectile) {
-            ((Projectile) b.getUserData()).setToDestroy();
-            if (a.getUserData() instanceof Movable) {
-                ((Movable) a.getUserData()).damage(((Projectile) b.getUserData()).getDamage());
-            }
-            return;
-        }
+        if (this.handleProjectileCollision(a, b)) return;
+        if (this.handleProjectileCollision(b, a)) return;
 
         if (a.isSensor() && a.getUserData() instanceof NPC && b.getUserData() instanceof Player) {
             ((Player) b.getUserData()).setInteract((NPC) a.getUserData());
@@ -34,6 +22,17 @@ public class OverworldContactListener implements ContactListener {
         if (b.isSensor() && b.getUserData() instanceof NPC && a.getUserData() instanceof Player) {
             ((Player) a.getUserData()).setInteract((NPC) b.getUserData());
         }
+    }
+
+    private boolean handleProjectileCollision(Fixture a, Fixture b) {
+        if (a.getUserData() instanceof Projectile) {
+            ((Projectile<?>) a.getUserData()).setToDestroy();
+            if (b.getUserData() instanceof Movable) {
+                ((Movable<?>) b.getUserData()).damage(((Projectile<?>) a.getUserData()).getDamage());
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override

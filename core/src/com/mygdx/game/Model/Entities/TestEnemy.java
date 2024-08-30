@@ -40,7 +40,9 @@ public class TestEnemy extends Enemy<TestEnemy> {
          */
         @Override
         public TestEnemy build(Wasteland game, Map map, World world) {
-            return new TestEnemy(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon, this.target);
+            TestEnemy testEnemy = new TestEnemy(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon, this.target);
+            map.addEnemy(testEnemy);
+            return testEnemy;
         }
     }
 }

@@ -23,7 +23,7 @@ public class Wasteland extends Game {
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
+        this.batch = new SpriteBatch();
 		this.font = new BitmapFont();
 		this.assetManager = new AssetManager();
 		this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());

@@ -41,7 +41,7 @@ public class PlayerInventory implements Inventory {
     }
 
     /**
-     * @param item the item we want to check if its in the inventory
+     * @param item the item we want to check if it's in the inventory
      * @return if the item is in the inventory
      */
     @Override

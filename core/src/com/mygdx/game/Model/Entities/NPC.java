@@ -51,7 +51,9 @@ public class NPC extends Character<NPC> {
          */
         @Override
         public NPC build(Wasteland game, Map map, World world) {
-            return new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon, this.conversationPath);
+            NPC npc = new NPC(game, map, world, this.texturePath, this.posX, this.posY, this.width, this.height, this.moveSpeed, this.health, this.weapon, this.conversationPath);
+            map.addNPC(npc);
+            return npc;
         }
 
         public Builder set(ConversationPaths conversationPath) {

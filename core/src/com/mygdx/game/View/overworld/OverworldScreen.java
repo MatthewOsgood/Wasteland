@@ -12,13 +12,15 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.Model.*;
+import com.mygdx.game.Model.Entities.DroppedItem;
 import com.mygdx.game.Model.Entities.NPC;
 import com.mygdx.game.Model.Entities.Player;
 import com.mygdx.game.Model.Entities.TestEnemy;
 import com.mygdx.game.Model.Items.Weapons.NullWeapon;
-import com.mygdx.game.Wasteland;
+import com.mygdx.game.Model.Map;
+import com.mygdx.game.Model.MapBodyBuilder;
 import com.mygdx.game.View.dialogue.DialogueOverlay;
+import com.mygdx.game.Wasteland;
 import com.mygdx.game.contactListeners.OverworldContactListener;
 import com.mygdx.game.enums.ConversationPaths;
 import com.mygdx.game.enums.TexturePaths;
@@ -75,9 +77,7 @@ public class OverworldScreen implements Screen {
         this.tiledMapRenderer.setView(this.camera);
 
         NPC testNPC = new NPC.Builder().pos(8f, 8f).set(ConversationPaths.TEST).set(TexturePaths.TEST_NPC).build(this.game, this.map, this.world);
-        this.map.addNPC(testNPC);
         TestEnemy testEnemy = new TestEnemy.Builder().set(TexturePaths.TEST_ENEMY).health(100).set(this.player).pos(15.5f, 10f).weapon(new NullWeapon()).build(this.game, this.map, this.world);
-        this.map.addEnemy(testEnemy);
     }
 
     /**
@@ -118,6 +118,9 @@ public class OverworldScreen implements Screen {
         }
     }
 
+    public void givePlayerItem(DroppedItem item) {
+
+    }
 
     /**
      * handles player movement
